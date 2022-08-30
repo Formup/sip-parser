@@ -3,14 +3,17 @@ export type SIPMessage = SIPRequest | SIPResponse;
 export interface SIPRequest {
     method: string,
     requestUri: SipUri,
-    version: '2.0'
-    content: string
+    version: '2.0',
+    headers: string,
+    content: string,
 }
 
 export interface SIPResponse {
     version: '2.0',
     statusCode: number,
-    reason: string
+    reason: string,
+    headers: string,
+    content: string,
 }
 
 export interface SipUri {
@@ -72,7 +75,8 @@ function parseRequest(method: string, requestUri: string, headerLines: string[],
         method,
         version: '2.0',
         requestUri: parseUri(requestUri),
-        content: headerLines.join('\n')
+        headers: headerLines.join('\n'),
+        content: contentLines.join('\n'),
     };
 }
 
@@ -93,6 +97,8 @@ function parseResponse(statusCode: number, reason: string, headerLines: string[]
     return {
         version: '2.0',
         statusCode,
-        reason
+        reason,
+        headers: headerLines.join('\n'),
+        content: contentLines.join('\n'),
     };
 }
