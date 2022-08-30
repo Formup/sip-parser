@@ -1,0 +1,22 @@
+{
+  "name": "sip-parser",
+  "version": "1.0.0",
+  "description": "A simple package for parsing and stringifying SIP messages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Formup/sip-parser.git"
+  },
+  "keywords": [
+    "sip"
+  ],
+  "author": "Formup",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Formup/sip-parser/issues"
+  },
+  "homepage": "https://github.com/Formup/sip-parser#readme"
+}
