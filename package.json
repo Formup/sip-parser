@@ -4,6 +4,7 @@
   "description": "A simple package for parsing and stringifying SIP messages.",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "jest"
   },
   "repository": {
@@ -21,6 +22,9 @@
   "homepage": "https://github.com/Formup/sip-parser#readme",
   "devDependencies": {
     "@types/jest": "^29.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.0",
+    "@typescript-eslint/parser": "^5.36.0",
+    "eslint": "^8.23.0",
     "jest": "^28.0.0",
     "ts-jest": "^28.0.8",
     "typescript": "^4.8.2"
