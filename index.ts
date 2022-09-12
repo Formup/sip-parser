@@ -29,7 +29,6 @@ export function parse(rawMessage: string): SIPMessage {
     const contentLines = isolateContentLines(messageLines);
     
     const requestLineMatches = matchRequestLine(startLine);
-    
     if (requestLineMatches) {
         if (requestLineMatches[3] !== '2.0')
             throw new Error('Unsupported SIP version: ' + requestLineMatches[3]);

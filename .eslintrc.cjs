@@ -1,3 +1,4 @@
+// TODO: Make recursive, to run on all folders
 module.exports = {
     extends: [
         'eslint:recommended', 
