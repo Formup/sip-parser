@@ -11,15 +11,15 @@ export interface HeaderParameter {
 
 export function parseHeaderLine(headerLine: string): Header[] {
     // Matches the header name (alphabet and dash characters), and one or more header values with zero or more parameters
-    const headerMatches = headerLine.match(/([A-Za-z-]+)\s*:\s*([\w\s\-;,=<>@:.]*[\w\-<>@:.])/); // TODO: the latter part is not matching all possible characters.
+    const headerMatches = headerLine.match(/([A-Za-z-]+)\s*:\s*([\w\s\-;,=<>@:.\/]*[\w\-<>@:.])/);
     if (!headerMatches)
         throw new Error('Invalid header line ' + headerLine);
 
     const headerName = headerMatches[1];
-    const headerValueParts = headerMatches[2].split(',');
+    const headerValueParts = headerMatches[2].split(',').map(part => part.trim());
     const parsedHeaders: Header[] = [];
     for (const headerValuePart of headerValueParts) {
-        const headerValueMatches = headerValuePart.match(/([\w\-<>@:.]+)(?:;([\w-]+)=([\w@<>\-:.]+))*/);
+        const headerValueMatches = headerValuePart.match(/([\w\-<>@:.\/]*(?:\s*[\w\-<>@:.\/]+)*)\s*(?:;\s*([\w-]+)=([\w@<>\-:.]+))*/);
         if (!headerValueMatches)
             throw new Error('Could not parse header value from ' + headerValuePart);
 

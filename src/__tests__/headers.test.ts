@@ -10,8 +10,16 @@ describe('Headers', () => {
             expect(header.fieldName).toBe('content-disposition');
             expect(header.fieldValue).toBe('session');
         });
+        it('should allow whitespace in the header value', () => {
+            const headerLine = 'CSeq: 63104 OPTIONS';
+            const parsedHeaders = parseHeaderLine(headerLine);
+            expect(parsedHeaders.length).toBe(1);
+            const header = parsedHeaders[0];
+            expect(header.fieldName).toBe('CSeq');
+            expect(header.fieldValue).toBe('63104 OPTIONS');
+        });
         it('should allow multiple values on the same line', () => {
-            const headerLine = 'Route: <sip:alice@atlanta.com>, <sip:bob@biloxi.com>';
+            const headerLine = 'Route: <sip:alice@atlanta.com>,<sip:bob@biloxi.com>';
             const parsedHeaders = parseHeaderLine(headerLine);
             expect(parsedHeaders.length).toBe(2);
             expect(parsedHeaders[0].fieldName).toBe('Route');
@@ -19,7 +27,15 @@ describe('Headers', () => {
             expect(parsedHeaders[0].fieldValue).toBe('<sip:alice@atlanta.com>');
             expect(parsedHeaders[1].fieldValue).toBe('<sip:bob@biloxi.com>');
         });
-        it.todo('should allow parameters for a single header value');
+        it('should ignore whitespace between values', () => {
+            const headerLine = 'Route: <sip:alice@atlanta.com> ,  <sip:bob@biloxi.com>';
+            const parsedHeaders = parseHeaderLine(headerLine);
+            expect(parsedHeaders.length).toBe(2);
+            expect(parsedHeaders[0].fieldName).toBe('Route');
+            expect(parsedHeaders[1].fieldName).toBe('Route');
+            expect(parsedHeaders[0].fieldValue).toBe('<sip:alice@atlanta.com>');
+            expect(parsedHeaders[1].fieldValue).toBe('<sip:bob@biloxi.com>');
+        });
         it.todo('should allow parameters for multiple header values');
         it.todo('should allow breaking the header on multiple lines');
     });
