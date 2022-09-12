@@ -1,10 +1,12 @@
+import { type Header, type HeaderParameter, parseHeaderLine } from './src/headers';
+
 export type SIPMessage = SIPRequest | SIPResponse;
 
 export interface SIPRequest {
     method: string,
     requestUri: SipUri,
     version: '2.0',
-    headers: string,
+    headers: Header[],
     content: string,
 }
 
@@ -12,7 +14,7 @@ export interface SIPResponse {
     version: '2.0',
     statusCode: number,
     reason: string,
-    headers: string,
+    headers: Header[],
     content: string,
 }
 
@@ -27,7 +29,7 @@ export function parse(rawMessage: string): SIPMessage {
     const startLine = messageLines[0];
     const headerLines = isolateHeaderLines(messageLines);
     const contentLines = isolateContentLines(messageLines);
-    
+
     const requestLineMatches = matchRequestLine(startLine);
     if (requestLineMatches) {
         if (requestLineMatches[3] !== '2.0')
@@ -64,26 +66,26 @@ function isolateHeaderLines(messageLines: string[]): string[] {
 
 function isolateContentLines(messageLines: string[]): string[] {
     const endOfHeaders = messageLines.findIndex(line => line === '\r\n');
-    return (endOfHeaders === -1 || endOfHeaders === messageLines.length - 1) 
-        ? [] 
+    return (endOfHeaders === -1 || endOfHeaders === messageLines.length - 1)
+        ? []
         : messageLines.slice(endOfHeaders + 1);
 }
 
-function parseRequest(method: string, requestUri: string, headerLines: string[], contentLines: string[]): SIPRequest { 
+function parseRequest(method: string, requestUri: string, headerLines: string[], contentLines: string[]): SIPRequest {
     return {
         method,
         version: '2.0',
         requestUri: parseUri(requestUri),
-        headers: headerLines.join('\n'),
+        headers: headerLines.flatMap(line => parseHeaderLine(line)),
         content: contentLines.join('\n'),
     };
 }
 
 function parseUri(uriString: string): SipUri {
-    // Mathces the username, the host and optionally a port.
+    // Matches the username, the host and optionally a port.
     const uriMatches = uriString.match(/sip:(\w+)@(\w+\.\w+)(?::?(\d+))?/);
     if (!uriMatches)
-        throw new Error('Given sring was not a valid URI: ' + uriString);
+        throw new Error('Given string was not a valid URI: ' + uriString);
 
     return {
         user: uriMatches[1],
@@ -97,7 +99,7 @@ function parseResponse(statusCode: number, reason: string, headerLines: string[]
         version: '2.0',
         statusCode,
         reason,
-        headers: headerLines.join('\n'),
+        headers: headerLines.flatMap(line => parseHeaderLine(line)),
         content: contentLines.join('\n'),
     };
 }
