@@ -36,7 +36,7 @@ function buildSingleHeader(headerName: string, headerValue: string): Header {
     return {
         fieldName: headerName,
         fieldValue: fieldValue,
-        parameters: parameters || undefined
+        parameters: parameters.length > 0 ? parameters : undefined,
     };
 }
 
