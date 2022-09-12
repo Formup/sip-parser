@@ -100,6 +100,6 @@ function parseResponse(statusCode: number, reason: string, headerLines: string[]
         statusCode,
         reason,
         headers: headerLines.flatMap(line => parseHeaderLine(line)),
-        content: contentLines.join('\n'),
+        content: contentLines.join('\r\n'),
     };
 }
