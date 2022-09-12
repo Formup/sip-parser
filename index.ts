@@ -1,4 +1,4 @@
-import { type Header, type HeaderParameter, parseHeaderLine } from './src/headers';
+import { type Header, parseHeaderLine } from './src/headers';
 
 export type SIPMessage = SIPRequest | SIPResponse;
 
