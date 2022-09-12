@@ -1,10 +1,10 @@
-export interface Header {
+interface Header {
     fieldName: string,
     fieldValue: string,
     parameters?: HeaderParameter[],
 }
 
-export interface HeaderParameter {
+interface HeaderParameter {
     parameterName: string,
     parameterValue: string,
 }

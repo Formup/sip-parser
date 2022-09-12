@@ -55,22 +55,17 @@ describe('Headers', () => {
             }
         });
         it('should allow parameters for multiple header values', () => {
-            const headerLine = 'Route: <sip:alice@atlanta.com>;custom=abc, <sip:bob@biloxi.com> ;custom=def';
+            const headerLine = 'Accept: application/sdp;level=1, application/x-private, text/html';
             const parsedHeaders = parseHeaderLine(headerLine);
-            expect(parsedHeaders.length).toBe(2);
+            expect(parsedHeaders.length).toBe(3);
             const parameters1 = parsedHeaders[0].parameters;
             const parameters2 = parsedHeaders[1].parameters;
-            expect(parameters1);
-            expect(parameters2);
+            expect(parameters1).toBeDefined();
+            expect(parameters2).toBeUndefined();
             if (parameters1) {
                 expect(parameters1.length).toBe(1);
-                expect(parameters1[0].parameterName).toBe('custom');
-                expect(parameters1[0].parameterValue).toBe('abc');
-            }
-            if (parameters2) {
-                expect(parameters2.length).toBe(1);
-                expect(parameters2[0].parameterName).toBe('custom');
-                expect(parameters2[0].parameterValue).toBe('def');
+                expect(parameters1[0].parameterName).toBe('level');
+                expect(parameters1[0].parameterValue).toBe('1');
             }
         });
         it.todo('should allow breaking the header on multiple lines');
