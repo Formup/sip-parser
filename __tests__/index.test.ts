@@ -1,4 +1,4 @@
-import { parse } from "../index";
+import { parse } from '../index';
 
 describe('parse', () => {
     describe('request', () => {
@@ -79,7 +79,7 @@ describe('parse', () => {
         describe('Headers general', () => {
             it.todo('should find headers in case-insensitive manner');
             it.todo('should allow arbitrary whitespace between the header name and value');
-            it.todo('should ')
+            it.todo('should ');
         });
         describe('Via', () => {
             it.todo('should throw an error if protocol is not 2.0');

@@ -12,4 +12,9 @@ module.exports = {
     },
     plugins: ['@typescript-eslint'],
     root: true,
+    rules: {
+        'indent': ['error', 4],
+        'quotes': ['error', 'single'],
+        'semi': ['error', 'always'],
+    },
 };

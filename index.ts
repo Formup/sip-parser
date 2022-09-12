@@ -39,7 +39,7 @@ export function parse(rawMessage: string): SIPMessage {
     const statusLineMatches = matchStatusLine(startLine);
     if (statusLineMatches) {
         if (statusLineMatches[1] !== '2.0')
-                throw new Error('Unsupported SIP version: ' + statusLineMatches[1]);
+            throw new Error('Unsupported SIP version: ' + statusLineMatches[1]);
 
         return parseResponse(parseInt(statusLineMatches[2]), statusLineMatches[3], headerLines, contentLines);
     }

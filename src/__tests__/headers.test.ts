@@ -1,4 +1,4 @@
-import { parseHeaderLine } from "../headers";
+import { parseHeaderLine } from '../headers';
 
 describe('Headers', () => {
     describe('parseHeader', () => {

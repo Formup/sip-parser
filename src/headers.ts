@@ -42,10 +42,10 @@ function buildSingleHeader(headerName: string, headerValue: string): Header {
 
 function matchHeaderLine(headerLine: string) {
     // Matches the field name and the entire field value, including potentially multiple header values with parameters.
-    return headerLine.match(/([A-Za-z-]+)\s*:\s*([\w\s\-;,=<>@:.\/]*[\w\-<>@:.])/);
+    return headerLine.match(/([A-Za-z-]+)\s*:\s*([\w\s\-;,=<>@:./]*[\w\-<>@:.])/);
 }
 
 function matchHeaderValue(headerValue: string) {
     // Matches the header value, potentially with whitespace in the middle, followed by parameters.
-    return headerValue.match(/([\w\-<>@:.\/]*(?:\s*[\w\-<>@:.\/]+)*)\s*(?:;\s*([\w-]+)=([\w@<>\-:.]+))*/);
+    return headerValue.match(/([\w\-<>@:./]*(?:\s*[\w\-<>@:./]+)*)\s*(?:;\s*([\w-]+)=([\w@<>\-:.]+))*/);
 }
