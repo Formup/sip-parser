@@ -3,25 +3,27 @@ import { stringifyUri } from './uri';
 import { stringifyHeader } from './headers';
 
 export function stringify(message: SIPMessage): string {
+    let startLine = makeStartLine(message) + '\r\n';
+    const headerLines = message.headers.map(header => stringifyHeader(header));
+    let messageString = startLine + headerLines.join('\r\n');
+    if (message.content?.length > 0)
+        messageString += `\r\n\r\n${message.content}`;
+
+    return messageString;
+}
+
+function makeStartLine(message: SIPMessage) {
     if ('method' in message) {
-        return stringifyRequest(message);
+        return makeRequestStartLine(message);
     } else {
-        return stringifyResponse(message);
+        return makeResponseStartLine(message);
     }
 }
 
-function stringifyRequest(message: SIPRequest): string {
-    const uriString = stringifyUri(message.requestUri);
-    const startLine = `${message.method} ${uriString} SIP/${message.version}`;
-    const headerLines = message.headers.map(header => stringifyHeader(header));
-    let requestString = startLine + '\r\n';
-    requestString += headerLines.join('\r\n');
-    if (message.content?.length > 0)
-        requestString += `\r\n\r\n${message.content}`;
-
-    return requestString;
+function makeRequestStartLine(message: SIPRequest): string {
+    return `${message.method} ${stringifyUri(message.requestUri)} SIP/${message.version}`;
 }
 
-function stringifyResponse(message: SIPResponse): string {
-    return 'not yet implemented';
+function makeResponseStartLine(message: SIPResponse): string {
+    return `SIP/${message.version} ${message.statusCode} ${message.reason}`;
 }
