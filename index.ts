@@ -1,4 +1,5 @@
 import { type Header, parseHeaderLine } from './src/headers';
+import { type SipUri, parseUri } from './src/uri';
 
 export type SIPMessage = SIPRequest | SIPResponse;
 
@@ -16,12 +17,6 @@ export interface SIPResponse {
     reason: string,
     headers: Header[],
     content: string,
-}
-
-export interface SipUri {
-    host: string,
-    user: string,
-    port: number | undefined,
 }
 
 export function parse(rawMessage: string): SIPMessage {
@@ -78,19 +73,6 @@ function parseRequest(method: string, requestUri: string, headerLines: string[],
         requestUri: parseUri(requestUri),
         headers: headerLines.flatMap(line => parseHeaderLine(line)),
         content: contentLines.join('\n'),
-    };
-}
-
-function parseUri(uriString: string): SipUri {
-    // Matches the username, the host and optionally a port.
-    const uriMatches = uriString.match(/sip:(\w+)@(\w+\.\w+)(?::?(\d+))?/);
-    if (!uriMatches)
-        throw new Error('Given string was not a valid URI: ' + uriString);
-
-    return {
-        user: uriMatches[1],
-        host: uriMatches[2],
-        port: uriMatches[3] ? parseInt(uriMatches[3]) : undefined,
     };
 }
 
