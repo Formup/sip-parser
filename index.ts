@@ -44,16 +44,6 @@ export function parse(rawMessage: string): SIPMessage {
     throw new Error('Message start line was neither a valid request line nor a valid status line: ' + startLine);
 }
 
-function matchRequestLine(startLine: string) {
-    // Matches the method, request URI and SIP version.
-    return startLine.match(/([A-Z]+)\s(sip:[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+(?::\d+)?)\sSIP\/(\d\.\d)/);
-}
-
-function matchStatusLine(startLine: string) {
-    // Matches the version, status code and reason string.
-    return startLine.match(/SIP\/(\d\.\d)\s(\d{3})\s(\w+)/);
-}
-
 function isolateHeaderLines(messageLines: string[]): string[] {
     const endOfHeaders = messageLines.findIndex(line => line === '\r\n');
     return endOfHeaders === -1 ? messageLines.slice(1) : messageLines.slice(1, endOfHeaders);
@@ -66,13 +56,23 @@ function isolateContentLines(messageLines: string[]): string[] {
         : messageLines.slice(endOfHeaders + 1);
 }
 
+function matchRequestLine(startLine: string) {
+    // Matches the method, request URI and SIP version.
+    return startLine.match(/([A-Z]+)\s(sip:[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+(?::\d+)?)\sSIP\/(\d\.\d)/);
+}
+
+function matchStatusLine(startLine: string) {
+    // Matches the version, status code and reason string.
+    return startLine.match(/SIP\/(\d\.\d)\s(\d{3})\s(\w+)/);
+}
+
 function parseRequest(method: string, requestUri: string, headerLines: string[], contentLines: string[]): SIPRequest {
     return {
         method,
         version: '2.0',
         requestUri: parseUri(requestUri),
         headers: headerLines.flatMap(line => parseHeaderLine(line)),
-        content: contentLines.join('\n'),
+        content: contentLines.join('\r\n'),
     };
 }
 
