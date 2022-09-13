@@ -1,4 +1,4 @@
-import { parseUri } from '../uri';
+import { parseUri, stringifyUri } from '../uri';
 
 describe('parseUri', () => {
     describe('missing protocol part', () => {
@@ -30,6 +30,11 @@ describe('parseUri', () => {
             uri = parseUri(validUrl);
             expect(uri.host).toBe('turku.com');
         });
+        it('should handle ip-addresses as a host', () => {
+            const validUri = 'sip:tester@192.168.1.16:5060';
+            const uri = parseUri(validUri);
+            expect(uri.host).toBe('192.168.1.16');
+        });
         it.todo('should parse a hostname with all the allowed characters');
         it.todo('should reject a hostname with illegal characters');
     });
@@ -48,6 +53,47 @@ describe('parseUri', () => {
             const badPortUri = 'sip:jesus@nasaret.com:hallelujah';
             const uri = parseUri(badPortUri);
             expect(uri.port).toBeUndefined();
+        });
+    });
+});
+
+describe('stringifyUri', () => {
+    describe('no port', () => {
+        it('should stringify a URI that has no port', () => {
+            const uri = {
+                user: 'hemuli',
+                host: 'moominvalley.com'
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('sip:hemuli@moominvalley.com');
+        });
+        it('should stringify when the host is an IP address and has no port', () => {
+            const uri = {
+                user: 'pappa',
+                host: '19.82.44.120'
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('sip:pappa@19.82.44.120');
+        });
+    });
+    describe('with port', () => {
+        it('should stringify a URI that has a port', () => {
+            const uri = {
+                user: 'hemuli',
+                host: 'moominvalley.com',
+                port: 5062
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('sip:hemuli@moominvalley.com:5062');
+        });
+        it('should stringify when the host is an IP address and has a port', () => {
+            const uri = {
+                user: 'pappa',
+                host: '19.82.44.120',
+                port: 5063
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('sip:pappa@19.82.44.120:5063');
         });
     });
 });

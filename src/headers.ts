@@ -1,13 +1,4 @@
-export interface Header {
-    fieldName: string,
-    fieldValue: string,
-    parameters?: HeaderParameter[],
-}
-
-export interface HeaderParameter {
-    parameterName: string,
-    parameterValue: string,
-}
+import { Header, HeaderParameter } from './types';
 
 export function parseHeaderLine(headerLine: string): Header[] {
     const headerNameAndValues = matchHeaderLine(headerLine);
@@ -48,4 +39,14 @@ function matchHeaderLine(headerLine: string) {
 function matchHeaderValue(headerValue: string) {
     // Matches the header value, potentially with whitespace in the middle, followed by parameters.
     return headerValue.match(/([\w\-<>@:./]*(?:\s*[\w\-<>@:./]+)*)\s*(?:;\s*([\w-]+)=([\w@<>\-:.]+))*/);
+}
+
+export function stringifyHeader(header: Header): string {
+    const parameterless = `${header.fieldName}: ${header.fieldValue}`;
+    let parameters = '';
+    if (header.parameters && header.parameters.length > 0) {
+        const keyValueStrings = header.parameters.map(param => `${param.parameterName}=${param.parameterValue}`);
+        parameters = ';' + keyValueStrings.join(';');
+    }
+    return parameterless + parameters;
 }
