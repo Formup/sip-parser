@@ -13,15 +13,15 @@ describe('stringify', () => {
                     headers: [{
                         fieldName: 'Via',
                         fieldValue: 'SIP/2.0/UDP pc33.atlanta.com',
-                        parameters: [{ parameterName: 'branch', parameterValue: 'z9hG4bKkjshdyff' }],
+                        parameters: [{ name: 'branch', value: 'z9hG4bKkjshdyff' }],
                     }, {
                         fieldName: 'To',
                         fieldValue: 'Bob <sip:bob@biloxi.com>',
-                        parameters: [{ parameterName: 'tag', parameterValue: '99sa0xk' }],
+                        parameters: [{ name: 'tag', value: '99sa0xk' }],
                     }, {
                         fieldName: 'From',
                         fieldValue: 'Alice <sip:alice@atlanta.com>',
-                        parameters: [{ parameterName: 'tag', parameterValue: '88sja8x' }],
+                        parameters: [{ name: 'tag', value: '88sja8x' }],
                     }, {
                         fieldName: 'Max-Forwards', fieldValue: '70'
                     }, {
@@ -42,15 +42,15 @@ describe('stringify', () => {
                     headers: [{
                         fieldName: 'Via',
                         fieldValue: 'SIP/2.0/UDP pc33.atlanta.com',
-                        parameters: [{ parameterName: 'branch', parameterValue: 'z9hG4bKkjshdyff' }],
+                        parameters: [{ name: 'branch', value: 'z9hG4bKkjshdyff' }],
                     }, {
                         fieldName: 'To',
                         fieldValue: 'Bob <sip:bob@biloxi.com>',
-                        parameters: [{ parameterName: 'tag', parameterValue: '99sa0xk' }],
+                        parameters: [{ name: 'tag', value: '99sa0xk' }],
                     }, {
                         fieldName: 'From',
                         fieldValue: 'Alice <sip:alice@atlanta.com>',
-                        parameters: [{ parameterName: 'tag', parameterValue: '88sja8x' }],
+                        parameters: [{ name: 'tag', value: '88sja8x' }],
                     }, {
                         fieldName: 'Max-Forwards', fieldValue: '70'
                     }, {
@@ -73,15 +73,15 @@ describe('stringify', () => {
                     headers: [{
                         fieldName: 'Via',
                         fieldValue: 'SIP/2.0/UDP pc33.atlanta.com',
-                        parameters: [{ parameterName: 'branch', parameterValue: 'z9hG4bKkjshdyff' }],
+                        parameters: [{ name: 'branch', value: 'z9hG4bKkjshdyff' }],
                     }, {
                         fieldName: 'To',
                         fieldValue: 'Bob <sip:bob@biloxi.com>',
-                        parameters: [{ parameterName: 'tag', parameterValue: '99sa0xk' }],
+                        parameters: [{ name: 'tag', value: '99sa0xk' }],
                     }, {
                         fieldName: 'From',
                         fieldValue: 'Alice <sip:alice@atlanta.com>',
-                        parameters: [{ parameterName: 'tag', parameterValue: '88sja8x' }],
+                        parameters: [{ name: 'tag', value: '88sja8x' }],
                     }, {
                         fieldName: 'Max-Forwards', fieldValue: '70'
                     }, {
@@ -112,30 +112,30 @@ describe('stringify', () => {
                     headers: [{
                         fieldName: 'Via', fieldValue: 'SIP/2.0/UDP server10.biloxi.com',
                         parameters: [
-                            { parameterName: 'branch', parameterValue: 'z9hG4bKnashds8' },
-                            { parameterName: 'received', parameterValue: '192.0.2.3' }
+                            { name: 'branch', value: 'z9hG4bKnashds8' },
+                            { name: 'received', value: '192.0.2.3' }
                         ]
                     }, {
                         fieldName: 'Via', fieldValue: 'SIP/2.0/UDP bigbox3.site3.atlanta.com',
                         parameters: [
-                            { parameterName: 'branch', parameterValue: 'z9hG4bK77ef4c2312983.1' },
-                            { parameterName: 'received', parameterValue: '192.0.2.2' }
+                            { name: 'branch', value: 'z9hG4bK77ef4c2312983.1' },
+                            { name: 'received', value: '192.0.2.2' }
                         ]
                     }, {
                         fieldName: 'Via', fieldValue: 'SIP/2.0/UDP pc33.atlanta.com',
                         parameters: [
-                            { parameterName: 'branch', parameterValue: 'z9hG4bK776asdhds ' },
-                            { parameterName: 'received', parameterValue: '192.0.2.1' }
+                            { name: 'branch', value: 'z9hG4bK776asdhds ' },
+                            { name: 'received', value: '192.0.2.1' }
                         ]
                     }, {
                         fieldName: 'To', fieldValue: 'Bob <sip:bob@biloxi.com>',
                         parameters: [
-                            { parameterName: 'tag', parameterValue: 'a6c85cf' },
+                            { name: 'tag', value: 'a6c85cf' },
                         ]
                     }, {
                         fieldName: 'From', fieldValue: 'Alice <sip:alice@atlanta.com>',
                         parameters: [
-                            { parameterName: 'tag', parameterValue: '1928301774' },
+                            { name: 'tag', value: '1928301774' },
                         ]
                     }, {
                         fieldName: 'Call-ID', fieldValue: 'a84b4c76e66710@pc33.atlanta.com',

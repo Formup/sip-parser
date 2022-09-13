@@ -1,4 +1,4 @@
-import { Header, HeaderParameter } from './types';
+import { Header, NameValuePair } from './types';
 
 export function parseHeaderLine(headerLine: string): Header[] {
     const headerNameAndValues = matchHeaderLine(headerLine);
@@ -16,13 +16,13 @@ function buildSingleHeader(headerName: string, headerValue: string): Header {
         throw new Error('Could not parse header value from ' + headerValue);
 
     const fieldValue = fieldValueAndParams[1];
-    const parameters: HeaderParameter[] = [];
+    const parameters: NameValuePair[] = [];
     for (let i = 2; i < fieldValueAndParams.length; i += 2) {
         const parameterName = fieldValueAndParams[i];
         const parameterValue = fieldValueAndParams[i + 1];
         if (!parameterName || !parameterValue)
             continue;
-        parameters.push({ parameterName, parameterValue });
+        parameters.push({ name: parameterName, value: parameterValue });
     }
     return {
         fieldName: headerName,
@@ -45,7 +45,7 @@ export function stringifyHeader(header: Header): string {
     const parameterless = `${header.fieldName}: ${header.fieldValue}`;
     let parameters = '';
     if (header.parameters && header.parameters.length > 0) {
-        const keyValueStrings = header.parameters.map(param => `${param.parameterName}=${param.parameterValue}`);
+        const keyValueStrings = header.parameters.map(param => `${param.name}=${param.value}`);
         parameters = ';' + keyValueStrings.join(';');
     }
     return parameterless + parameters;

@@ -49,8 +49,8 @@ describe('parse header', () => {
         expect(parameters).toBeTruthy();
         if (parameters) {
             expect(parameters.length).toBe(1);
-            expect(parameters[0].parameterName).toBe('tag');
-            expect(parameters[0].parameterValue).toBe('a48s');
+            expect(parameters[0].name).toBe('tag');
+            expect(parameters[0].value).toBe('a48s');
         }
     });
     it('should allow parameters for multiple header values', () => {
@@ -63,8 +63,8 @@ describe('parse header', () => {
         expect(parameters2).toBeUndefined();
         if (parameters1) {
             expect(parameters1.length).toBe(1);
-            expect(parameters1[0].parameterName).toBe('level');
-            expect(parameters1[0].parameterValue).toBe('1');
+            expect(parameters1[0].name).toBe('level');
+            expect(parameters1[0].value).toBe('1');
         }
     });
     it.todo('should allow breaking the header on multiple lines');
@@ -93,8 +93,8 @@ describe('stringify header', () => {
             fieldName: 'From',
             fieldValue: 'Alice <sip:alice@atlanta.com>',
             parameters: [{
-                parameterName: 'tag',
-                parameterValue: '88sja8x',
+                name: 'tag',
+                value: '88sja8x',
             }],
         };
         const stringified = stringifyHeader(header);
@@ -105,11 +105,11 @@ describe('stringify header', () => {
             fieldName: 'From',
             fieldValue: 'Alice <sip:alice@atlanta.com>',
             parameters: [{
-                parameterName: 'tag',
-                parameterValue: '88sja8x',
+                name: 'tag',
+                value: '88sja8x',
             }, {
-                parameterName: 'custom',
-                parameterValue: 'abc123',
+                name: 'custom',
+                value: 'abc123',
             }],
         };
         const stringified = stringifyHeader(header);

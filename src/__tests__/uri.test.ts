@@ -55,6 +55,16 @@ describe('parseUri', () => {
             expect(uri.port).toBeUndefined();
         });
     });
+    describe('parameters', () => {
+        it.todo('should read URI parameters that have a key and a value');
+        it.todo('should read URI parameters that only have a key');
+        it.todo('should read multiple key-only URI parameters');
+        it.todo('should read multiple key-value parameters');
+        it.todo('should read mixed key-only and key-value parameters');
+    });
+    describe('headers', () => {
+
+    });
 });
 
 describe('stringifyUri', () => {

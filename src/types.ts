@@ -20,15 +20,16 @@ export interface SipUri {
     host: string,
     user: string,
     port?: number,
+    parameters?: NameValuePair[] | string;
 }
 
 export interface Header {
     fieldName: string,
     fieldValue: string,
-    parameters?: HeaderParameter[],
+    parameters?: NameValuePair[],
 }
 
-export interface HeaderParameter {
-    parameterName: string,
-    parameterValue: string,
+export interface NameValuePair {
+    name: string,
+    value: string,
 }
