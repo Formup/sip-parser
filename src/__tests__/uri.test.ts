@@ -56,7 +56,19 @@ describe('parseUri', () => {
         });
     });
     describe('parameters', () => {
-        it.todo('should read URI parameters that have a key and a value');
+        it('should read URI parameters that have a key and a value', () => {
+            const parametersUri = 'sip:alice@atlanta.com;maddr=239.255.255.1'
+            const uri = parseUri(parametersUri);
+            expect(uri.parameters).toBeDefined();
+            expect(uri.parameters?.length).toBe(1);
+            if (uri.parameters) {
+                expect(typeof uri.parameters[0]).toBe('object');
+                if (typeof uri.parameters[0] === 'object') {
+                    expect(uri.parameters[0].name).toBe('maddr');
+                    expect(uri.parameters[0].value).toBe('239.255.255.1');
+                }
+            }
+        });
         it.todo('should read URI parameters that only have a key');
         it.todo('should read multiple key-only URI parameters');
         it.todo('should read multiple key-value parameters');

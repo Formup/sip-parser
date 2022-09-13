@@ -53,6 +53,38 @@ describe('parse header', () => {
             expect(parameters[0].value).toBe('a48s');
         }
     });
+    it('should allow multiple parameters for a header', () => {
+        const headerLine = 'Via: SIP/2.0/UDP 192.0.2.1:5060 ;received=192.0.2.207;branch=z9hG4bK77asjd'
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].fieldName).toBe('Via');
+        expect(parsedHeaders[0].fieldValue).toBe('SIP/2.0/UDP 192.0.2.1:5060');
+        expect(parsedHeaders[0].parameters).toBeDefined();
+        expect(parsedHeaders[0].parameters?.length).toBe(2);
+        if (parsedHeaders[0].parameters) {
+            expect(parsedHeaders[0].parameters[0].name).toBe('received');
+            expect(parsedHeaders[0].parameters[0].value).toBe('192.0.2.207');
+            expect(parsedHeaders[0].parameters[1].name).toBe('branch');
+            expect(parsedHeaders[0].parameters[1].value).toBe('z9hG4bK77asjd');
+        }
+    });
+    it('should allow URI with parameters in the header value', () => {
+        /*
+        The Contact, From, and To header fields contain a URI.  If the URI
+        contains a comma, question mark or semicolon, the URI MUST be
+        enclosed in angle brackets (< and >).  Any URI parameters are
+        contained within these brackets.  If the URI is not enclosed in angle
+        brackets, any semicolon-delimited parameters are header-parameters,
+        not URI parameters.
+        */
+       const headerLine = 'Contact: "Mr. Watson" <sip:watson@worcester.bell-telephone.com;custom=abc123>;q=0.7; expires=3600';
+       const parsedHeaders = parseHeaderLine(headerLine);
+       expect(parsedHeaders.length).toBe(1);
+       const header = parsedHeaders[0];
+       expect(header.fieldName).toBe('Contact');
+       expect(header.fieldValue).toBe('"Mr. Watson" <sip:watson@worcester.bell-telephone.com;custom=abc123>');
+       expect(header.parameters?.length).toBe(2);
+    });
     it('should allow parameters for multiple header values', () => {
         const headerLine = 'Accept: application/sdp;level=1, application/x-private, text/html';
         const parsedHeaders = parseHeaderLine(headerLine);

@@ -1,4 +1,5 @@
-import { Header, NameValuePair } from './types';
+import { parseNameValuePairs } from './nameValueParser';
+import { Header } from './types';
 
 export function parseHeaderLine(headerLine: string): Header[] {
     const headerNameAndValues = matchHeaderLine(headerLine);
@@ -16,14 +17,7 @@ function buildSingleHeader(headerName: string, headerValue: string): Header {
         throw new Error('Could not parse header value from ' + headerValue);
 
     const fieldValue = fieldValueAndParams[1];
-    const parameters: NameValuePair[] = [];
-    for (let i = 2; i < fieldValueAndParams.length; i += 2) {
-        const parameterName = fieldValueAndParams[i];
-        const parameterValue = fieldValueAndParams[i + 1];
-        if (!parameterName || !parameterValue)
-            continue;
-        parameters.push({ name: parameterName, value: parameterValue });
-    }
+    const parameters = parseNameValuePairs(fieldValueAndParams[2]);
     return {
         fieldName: headerName,
         fieldValue: fieldValue,
@@ -38,7 +32,7 @@ function matchHeaderLine(headerLine: string) {
 
 function matchHeaderValue(headerValue: string) {
     // Matches the header value, potentially with whitespace in the middle, followed by parameters.
-    return headerValue.match(/([\w\-<>@:./]*(?:\s*[\w\-<>@:./]+)*)\s*(?:;\s*([\w-]+)=([\w@<>\-:.]+))*/);
+    return headerValue.match(/([\w\-<>@:./]*(?:\s*[\w\-<>@:./]+)*)\s*(?:;([\w\s@<>\-=;:.]+))?/);
 }
 
 export function stringifyHeader(header: Header): string {
