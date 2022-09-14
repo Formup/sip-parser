@@ -29,7 +29,7 @@ function splitHeaderValues(valuesString: string): string[] {
 
 function matchHeaderLine(headerLine: string) {
     // Matches the field name and the entire field value, including potentially multiple header values with parameters.
-    return headerLine.match(/([A-Za-z-]+):([\w\s\-;,=<>@:./"]+)/);
+    return headerLine.match(/([A-Za-z-]+):([\w\s\-;,=<>!@:./"]+)/);
 }
 
 function splitFieldValueAndParams(headerValue: string): string[] {

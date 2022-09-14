@@ -39,7 +39,7 @@ function isolateHeaderLines(messageLines: string[]): string[] {
             if (allLines.length === 0)
                 throw new Error('The first header line cannot start with a whitespace: ' + currentLine);
 
-            allLines[allLines.length-1] += ` ${currentLine}`;
+            allLines[allLines.length-1] += ` ${currentLine.trimStart()}`;
         } else {
             allLines.push(currentLine);
         }

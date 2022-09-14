@@ -100,7 +100,7 @@ describe('start line', () => {
     });
 });
 describe('header lines', () => {
-    it('should combine multi-line headers', () => {
+    it('should combine multi-line headers, split before parameters', () => {
         const messageString =
             'SIP/2.0 200 OK\r\n' +
             'Via: SIP/2.0/UDP server10.biloxi.com\r\n' +
@@ -121,16 +121,34 @@ describe('header lines', () => {
         expect(parsed.headers[0]).toEqual({
             fieldName: 'Via', fieldValue: 'SIP/2.0/UDP server10.biloxi.com',
             parameters: [
-                {name: 'branch', value: 'z9hG4bKnashds8'},
-                {name: 'received', value: '192.0.2.3'}
+                { name: 'branch', value: 'z9hG4bKnashds8' },
+                { name: 'received', value: '192.0.2.3' }
             ]
         });
         expect(parsed.headers[1]).toEqual({
             fieldName: 'Via', fieldValue: 'SIP/2.0/UDP bigbox3.site3.atlanta.com',
             parameters: [
-                {name: 'branch', value: 'z9hG4bK77ef4c2312983.1'},
-                {name: 'received', value: '192.0.2.2'}
+                { name: 'branch', value: 'z9hG4bK77ef4c2312983.1' },
+                { name: 'received', value: '192.0.2.2' }
             ]
+        });
+    });
+    it('should combine multi-line params, split in the middle of the value', () => {
+        const messageString =
+            'INVITE sip:bob@biloxi.com SIP/2.0\r\n' +
+            'Via: SIP/2.0/UDP pc33.atlanta.com;branch=z9hG4bKkjshdyff\r\n' +
+            'To: Bob <sip:bob@biloxi.com>\r\n' +
+            'From: Alice <sip:alice@atlanta.com>;tag=88sja8x\r\n' +
+            'Max-Forwards: 70\r\n' +
+            'Subject: I know you are there\r\n' +
+            '         pick up the phone\r\n' +
+            '         and answer!\r\n' +
+            'Call-ID: 987asjd97y7atg\r\n' +
+            'CSeq: 986759 INVITE';
+        const parsed = parse(messageString);
+        expect(parsed.headers.length).toBe(7);
+        expect(parsed.headers[4]).toEqual({
+            fieldName: 'Subject', fieldValue: 'I know you are there pick up the phone and answer!'
         });
     });
 });
