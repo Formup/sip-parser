@@ -2,7 +2,7 @@
   "name": "sip-parser",
   "version": "1.0.0",
   "description": "A simple package for parsing and stringifying SIP messages.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --fix --ext .ts,.js . src/**",
     "test": "jest"
@@ -28,5 +28,6 @@
     "jest": "^28.0.0",
     "ts-jest": "^28.0.8",
     "typescript": "^4.8.2"
-  }
+  },
+  "types": "dist/index.d.ts"
 }
