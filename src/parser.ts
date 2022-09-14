@@ -29,7 +29,22 @@ export function parse(rawMessage: string): SIPMessage {
 
 function isolateHeaderLines(messageLines: string[]): string[] {
     const endOfHeaders = messageLines.findIndex(line => line === '\r\n');
-    return endOfHeaders === -1 ? messageLines.slice(1) : messageLines.slice(1, endOfHeaders);
+    const headerLines = endOfHeaders === -1 ? messageLines.slice(1) : messageLines.slice(1, endOfHeaders);
+
+    // Headers can be split into multiple lines. If a line starts with whitespace, it's combined to the previous line.
+    const compressedLines: string[] = [];
+    return headerLines.reduce((allLines, currentLine) => {
+        const startWhiteSpace = currentLine.match(/^\s+/);
+        if (startWhiteSpace) {
+            if (allLines.length === 0)
+                throw new Error('The first header line cannot start with a whitespace: ' + currentLine);
+
+            allLines[allLines.length-1] += ` ${currentLine}`;
+        } else {
+            allLines.push(currentLine);
+        }
+        return allLines;
+    }, compressedLines);
 }
 
 function isolateContentLines(messageLines: string[]): string[] {
