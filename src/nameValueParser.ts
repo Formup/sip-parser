@@ -6,7 +6,7 @@ export function parseNameValuePairs(input: string): NameValuePair[] {
 
     const paramList: NameValuePair[] = [];
     const params = input.split(';').map(str => str.trim());
-    for (const param in params) {
+    for (const param of params) {
         const [paramName, paramValue] = param.split('=').map(str => str.trim());
         paramList.push({
             name: paramName,
