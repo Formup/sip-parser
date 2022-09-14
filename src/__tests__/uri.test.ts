@@ -71,11 +71,28 @@ describe('parseUri', () => {
         });
         it.todo('should read URI parameters that only have a key');
         it.todo('should read multiple key-only URI parameters');
-        it.todo('should read multiple key-value parameters');
+        it('should read multiple key-value parameters', () => {
+            const parametersUri = 'sip:alice@atlanta.com;maddr=239.255.255.1;custom=abc123'
+            const uri = parseUri(parametersUri);
+            expect(uri.parameters).toBeDefined();
+            expect(uri.parameters?.length).toBe(2);
+            if (uri.parameters) {
+                expect(typeof uri.parameters[0]).toBe('object');
+                if (typeof uri.parameters[0] === 'object') {
+                    expect(uri.parameters[0].name).toBe('maddr');
+                    expect(uri.parameters[0].value).toBe('239.255.255.1');
+                }
+                expect(typeof uri.parameters[1]).toBe('object');
+                if (typeof uri.parameters[1] === 'object') {
+                    expect(uri.parameters[1].name).toBe('custom');
+                    expect(uri.parameters[1].value).toBe('abc123');
+                }
+            }
+        });
         it.todo('should read mixed key-only and key-value parameters');
     });
     describe('headers', () => {
-
+        it.todo('should test the header feature of URIs');
     });
 });
 

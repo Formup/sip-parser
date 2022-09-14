@@ -77,13 +77,18 @@ describe('parse header', () => {
         brackets, any semicolon-delimited parameters are header-parameters,
         not URI parameters.
         */
-       const headerLine = 'Contact: "Mr. Watson" <sip:watson@worcester.bell-telephone.com;custom=abc123>;q=0.7; expires=3600';
-       const parsedHeaders = parseHeaderLine(headerLine);
-       expect(parsedHeaders.length).toBe(1);
-       const header = parsedHeaders[0];
-       expect(header.fieldName).toBe('Contact');
-       expect(header.fieldValue).toBe('"Mr. Watson" <sip:watson@worcester.bell-telephone.com;custom=abc123>');
-       expect(header.parameters?.length).toBe(2);
+        const headerLine = 'Contact: "Mr. Watson" <sip:watson@worcester.bell-telephone.com;custom=abc123>;q=0.7; expires=3600';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        const header = parsedHeaders[0];
+        expect(header.fieldName).toBe('Contact');
+        expect(header.fieldValue).toBe('"Mr. Watson" <sip:watson@worcester.bell-telephone.com;custom=abc123>');
+        expect(header.parameters?.length).toBe(2);
+        expect(header.parameters).toEqual([{
+            name: 'q', value: '0.7'
+        }, {
+            name: 'expires', value: '3600'
+        }]);
     });
     it('should allow parameters for multiple header values', () => {
         const headerLine = 'Accept: application/sdp;level=1, application/x-private, text/html';
