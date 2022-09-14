@@ -1,5 +1,5 @@
 import { stringify } from '../stringifier';
-import { SIPResponse } from '../types'
+import { SIPResponse } from '../types';
 
 describe('stringify', () => {
     describe('request', () => {

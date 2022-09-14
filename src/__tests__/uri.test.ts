@@ -57,7 +57,7 @@ describe('parseUri', () => {
     });
     describe('parameters', () => {
         it('should read URI parameters that have a key and a value', () => {
-            const parametersUri = 'sip:alice@atlanta.com;maddr=239.255.255.1'
+            const parametersUri = 'sip:alice@atlanta.com;maddr=239.255.255.1';
             const uri = parseUri(parametersUri);
             expect(uri.parameters).toBeDefined();
             expect(uri.parameters?.length).toBe(1);
@@ -72,7 +72,7 @@ describe('parseUri', () => {
         it.todo('should read URI parameters that only have a key');
         it.todo('should read multiple key-only URI parameters');
         it('should read multiple key-value parameters', () => {
-            const parametersUri = 'sip:alice@atlanta.com;maddr=239.255.255.1;custom=abc123'
+            const parametersUri = 'sip:alice@atlanta.com;maddr=239.255.255.1;custom=abc123';
             const uri = parseUri(parametersUri);
             expect(uri.parameters).toBeDefined();
             expect(uri.parameters?.length).toBe(2);

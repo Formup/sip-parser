@@ -4,7 +4,7 @@
   "description": "A simple package for parsing and stringifying SIP messages.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --fix --ext .ts,.js . src/** __tests__/**",
+    "lint": "eslint --fix --ext .ts,.js . src/**",
     "test": "jest"
   },
   "repository": {

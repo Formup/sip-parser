@@ -3,7 +3,7 @@ import { stringifyUri } from './uri';
 import { stringifyHeader } from './headers';
 
 export function stringify(message: SIPMessage): string {
-    let startLine = makeStartLine(message) + '\r\n';
+    const startLine = makeStartLine(message) + '\r\n';
     const headerLines = message.headers.map(header => stringifyHeader(header));
     let messageString = startLine + headerLines.join('\r\n');
     if (message.content?.length > 0)

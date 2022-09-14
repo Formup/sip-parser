@@ -54,7 +54,7 @@ describe('parse header', () => {
         }
     });
     it('should allow multiple parameters for a header', () => {
-        const headerLine = 'Via: SIP/2.0/UDP 192.0.2.1:5060 ;received=192.0.2.207;branch=z9hG4bK77asjd'
+        const headerLine = 'Via: SIP/2.0/UDP 192.0.2.1:5060 ;received=192.0.2.207;branch=z9hG4bK77asjd';
         const parsedHeaders = parseHeaderLine(headerLine);
         expect(parsedHeaders.length).toBe(1);
         expect(parsedHeaders[0].fieldName).toBe('Via');
