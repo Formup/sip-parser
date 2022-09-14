@@ -33,7 +33,7 @@ const messageString =
 
 const parsedMessage = parse(messageString);
 
-console.log(JSON.stringify(parsedMessage));
+console.log(JSON.stringify(parsedMessage, null, 4));
 ```
 This will print:
 ```JSON
@@ -126,3 +126,90 @@ Subject: I know you are there pick up the phone and answer!
 Call-ID: 987asjd97y7atg
 CSeq: 986759 INVITE
 ```
+
+## Responses
+SIP responses are very similar to requests; they only differ in the start line. Parsed responses have `statusCode` and `reason` fields:
+```JavaScript
+import { parse } from './index';
+
+const sipResponse =
+    'SIP/2.0 200 OK\r\n' +
+    'Via: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7\r\n' +
+    '     ;received=192.0.2.4\r\n' +
+    'To: Bob <sip:bob@biloxi.com>;tag=2493k59kd\r\n' +
+    'From: Bob <sip:bob@biloxi.com>;tag=456248\r\n' +
+    'Call-ID: 843817637684230@998sdasdh09\r\n' +
+    'CSeq: 1826 REGISTER\r\n' +
+    'Contact: <sip:bob@192.0.2.4>\r\n' +
+    'Expires: 7200\r\n' +
+    'Content-Length: 0';
+
+const parsedResponse = parse(sipResponse);
+console.log(JSON.stringify(parsedResponse, null, 4));
+```
+Prints:
+```JSON
+{
+    "version": "2.0",
+    "statusCode": 200,
+    "reason": "OK",
+    "headers": [
+        {
+            "fieldName": "Via",
+            "fieldValue": "SIP/2.0/UDP bobspc.biloxi.com:5060",
+            "parameters": [
+                {
+                    "name": "branch",
+                    "value": "z9hG4bKnashds7"
+                },
+                {
+                    "name": "received",
+                    "value": "192.0.2.4"
+                }
+            ]
+        },
+        {
+            "fieldName": "To",
+            "fieldValue": "Bob <sip:bob@biloxi.com>",
+            "parameters": [
+                {
+                    "name": "tag",
+                    "value": "2493k59kd"
+                }
+            ]
+        },
+        {
+            "fieldName": "From",
+            "fieldValue": "Bob <sip:bob@biloxi.com>",
+            "parameters": [
+                {
+                    "name": "tag",
+                    "value": "456248"
+                }
+            ]
+        },
+        {
+            "fieldName": "Call-ID",
+            "fieldValue": "843817637684230@998sdasdh09"
+        },
+        {
+            "fieldName": "CSeq",
+            "fieldValue": "1826 REGISTER"
+        },
+        {
+            "fieldName": "Contact",
+            "fieldValue": "<sip:bob@192.0.2.4>"
+        },
+        {
+            "fieldName": "Expires",
+            "fieldValue": "7200"
+        },
+        {
+            "fieldName": "Content-Length",
+            "fieldValue": "0"
+        }
+    ],
+    "content": ""
+}
+```
+Obviously, stringifying the resulting object returns a valid SIP response string.
