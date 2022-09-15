@@ -25,6 +25,28 @@ describe('start line', () => {
                 });
             }
         });
+        it('should read a start line with ip address as a host', () => {
+            const ipHostRequest =
+                'OPTIONS sip:carol@192.168.1.106 SIP/2.0\r\n' +
+                'Via: SIP/2.0/UDP pc33.atlanta.com;branch=z9hG4bKhjhs8ass877\r\n' +
+                'Max-Forwards: 70\r\n' +
+                'To: <sip:carol@chicago.com>\r\n' +
+                'From: Alice <sip:alice@atlanta.com>;tag=1928301774\r\n' +
+                'Call-ID: a84b4c76e66710\r\n' +
+                'CSeq: 63104 OPTIONS\r\n' +
+                'Contact: <sip:alice@pc33.atlanta.com>\r\n' +
+                'Accept: application/sdp\r\n' +
+                'Content-Length: 0';
+            const parsed = parse(ipHostRequest);
+            expect('method' in parsed).toBeTruthy();
+            expect('requestUri' in parsed).toBeTruthy();
+            if ('method' in parsed && 'requestUri' in parsed) {
+                expect(parsed.method).toBe('OPTIONS');
+                expect(parsed.requestUri).toEqual({
+                    user: 'carol', host: '192.168.1.106'
+                });
+            }
+        });
         it('should read a start line with a port', () => {
             // Example modified from RFC3261
             const optionsRequestValid =
@@ -69,6 +91,52 @@ describe('start line', () => {
                 expect(parsed.requestUri).toEqual({
                     user: 'sip', host: 'espoosip.com', port: 44092
                 });
+            }
+        });
+        it('should allow a Request-URI without the user part', () => {
+            const registerRequest =
+                'REGISTER sip:registrar.biloxi.com SIP/2.0\r\n' +
+                'Via: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7\r\n' +
+                'Max-Forwards: 70\r\n' +
+                'To: Bob <sip:bob@biloxi.com>\r\n' +
+                'From: Bob <sip:bob@biloxi.com>;tag=456248\r\n' +
+                'Call-ID: 843817637684230@998sdasdh09\r\n' +
+                'CSeq: 1826 REGISTER\r\n' +
+                'Contact: <sip:bob@192.0.2.4>\r\n' +
+                'Expires: 7200\r\n' +
+                'Content-Length: 0';
+            const parsed = parse(registerRequest);
+            expect('method' in parsed);
+            expect('requestUri' in parsed);
+            if ('method' in parsed && 'requestUri' in parsed) {
+                expect(parsed.method).toBe('REGISTER');
+                expect(parsed.requestUri).toEqual({
+                    host: 'registrar.biloxi.com'
+                });
+                expect(parsed.headers.length).toBe(9);
+            }
+        });
+        it('should allow a Request-URI without the user part but with a port', () => {
+            const registerRequest =
+                'REGISTER sip:registrar.biloxi.com:54747 SIP/2.0\r\n' +
+                'Via: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7\r\n' +
+                'Max-Forwards: 70\r\n' +
+                'To: Bob <sip:bob@biloxi.com>\r\n' +
+                'From: Bob <sip:bob@biloxi.com>;tag=456248\r\n' +
+                'Call-ID: 843817637684230@998sdasdh09\r\n' +
+                'CSeq: 1826 REGISTER\r\n' +
+                'Contact: <sip:bob@192.0.2.4>\r\n' +
+                'Expires: 7200\r\n' +
+                'Content-Length: 0';
+            const parsed = parse(registerRequest);
+            expect('method' in parsed);
+            expect('requestUri' in parsed);
+            if ('method' in parsed && 'requestUri' in parsed) {
+                expect(parsed.method).toBe('REGISTER');
+                expect(parsed.requestUri).toEqual({
+                    host: 'registrar.biloxi.com', port: 54747
+                });
+                expect(parsed.headers.length).toBe(9);
             }
         });
         it.todo('should handle a user with unescaped, allowed special characters');
