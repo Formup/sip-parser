@@ -5,8 +5,12 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "npx tsc --project ./tsconfig.build.json",
-        "prepare": "eslint --ext .ts,.js index.ts src/** && npm test && rimraf dist/ && npm run build",
         "lint": "eslint --fix --ext .ts,.js index.ts src/**",
+        "lint:nofix": "eslint --ext .ts,.js index.ts src/**",
+        "prepare": "npm run lint:nofix && npm test && rimraf dist/ && npm run build",
+        "publish:patch": "npm version patch && npm publish && git push origin --tags",
+        "publish:minor": "npm version minor && npm publish && git push origin --tags",
+        "publish:major": "npm version major && npm publish && git push origin --tags",
         "test": "jest"
     },
     "repository": {
