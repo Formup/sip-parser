@@ -17,6 +17,36 @@ describe('parseUri', () => {
             const uri = parseUri(validUri);
             expect(uri.user).toBe('alice');
         });
+        it('should parse a userless uri format with port', () => {
+            const userlessUri = 'sip:chicago.com:59375';
+            const uri = parseUri(userlessUri);
+            expect(uri).toEqual({
+                host: 'chicago.com',
+                port: 59375
+            });
+        });
+        it('should parse userless uri format without port', () => {
+            const plainHostUri = 'sip:chicago.com';
+            const uri = parseUri(plainHostUri);
+            expect(uri).toEqual({
+                host: 'chicago.com'
+            });
+        });
+        it('should parse a userless uri with ip host with port', () => {
+            const ipHostUri = 'sip:192.168.1.16:44837';
+            const uri = parseUri(ipHostUri);
+            expect(uri).toEqual({
+                host: '192.168.1.16',
+                port: 44837
+            });
+        });
+        it('should parse a userless uri with ip host without port', () => {
+            const ipHostUri = 'sip:192.168.1.16';
+            const uri = parseUri(ipHostUri);
+            expect(uri).toEqual({
+                host: '192.168.1.16',
+            });
+        });
         it.todo('should parse special allowed characters in the user name');
         it.todo('should not allow characters that are not allowed in the RFC');
     });
@@ -133,6 +163,23 @@ describe('stringifyUri', () => {
             };
             const uriStr = stringifyUri(uri);
             expect(uriStr).toBe('sip:pappa@19.82.44.120:5063');
+        });
+    });
+    describe('no user', () => {
+        it('should stringify a URI with no user and a port', () => {
+            const uri = {
+                host: 'moominvalley.com',
+                port: 12345
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('sip:moominvalley.com:12345')
+        });
+        it('should stringify a URI with no user and no port', () => {
+            const uri = {
+                host: 'moominvalley.com',
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('sip:moominvalley.com')
         });
     });
 });

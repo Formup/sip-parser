@@ -18,7 +18,7 @@ export interface SIPResponse {
 
 export interface SipUri {
     host: string,
-    user: string,
+    user?: string,
     port?: number,
     parameters?: NameValuePair[] | string;
 }
