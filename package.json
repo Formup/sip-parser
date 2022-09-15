@@ -1,6 +1,6 @@
 {
     "name": "sip-parser",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "A simple package for parsing and stringifying SIP messages.",
     "main": "dist/index.js",
     "scripts": {
