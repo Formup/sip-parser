@@ -1,20 +1,22 @@
 {
-  "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig to read more about this file */
-    "target": "es2021",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "lib": ["es2021"],                                   /* Specify a set of bundled library declaration files that describe the target runtime environment. */
-    "module": "commonjs",                                /* Specify what module code is generated. */
-    "declaration": true,                                 /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
-    "outDir": "dist",                                    /* Specify an output folder for all emitted files. */
-    "noEmitOnError": true,                               /* Disable emitting files if any type checking errors are reported. */
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-    "strict": true,                                      /* Enable all strict type-checking options. */
-    "noImplicitAny": true,                               /* Enable error reporting for expressions and declarations with an implied 'any' type. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+    "compilerOptions": {
+        /* Visit https://aka.ms/tsconfig to read more about this file */
+        "target": "es2021",
+        "lib": [
+            "es2021"
+        ],
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "dist",
+        "noEmitOnError": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "skipLibCheck": true
+    },
+    "exclude": [
+        "dist",
+        "node_modules"
+    ]
 }
