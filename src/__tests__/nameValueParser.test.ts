@@ -15,12 +15,12 @@ describe('name-value parser', () => {
 });
 describe('name-value stringifier', () => {
     it('should stringify a single name-value pair', () => {
-        let pair = [{ name: 'abc', value: 'val' }];
+        const pair = [{ name: 'abc', value: 'val' }];
         const pairString = stringifyNameValuePairs(pair);
         expect(pairString).toBe(';abc=val');
     });
     it('should stringify a multiple name-value pair', () => {
-        let pair = [
+        const pair = [
             { name: 'abc', value: 'val' },
             { name: 'def', value: 'val2' }
         ];

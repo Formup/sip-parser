@@ -25,11 +25,11 @@ export function stringifyUri(uri: SipUri): string {
     sipString += uri.host;
 
     if (uri.port)
-        sipString += `:${uri.port}`
+        sipString += `:${uri.port}`;
 
     if (uri.parameters) {
         sipString += stringifyNameValuePairs(uri.parameters);
-        sipString = `<${sipString}>`
+        sipString = `<${sipString}>`;
     }
     return sipString;
 }

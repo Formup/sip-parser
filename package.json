@@ -4,7 +4,7 @@
   "description": "A simple package for parsing and stringifying SIP messages.",
   "main": "dist/index.js",
   "scripts": {
-    "prepare": "npm run lint && npm test && rimraf dist/ && npm run build",
+    "prepare": "eslint --ext .ts,.js index.ts src/** && npm test && rimraf dist/ && npm run build",
     "build": "npx tsc --project ./tsconfig.build.json",
     "lint": "eslint --fix --ext .ts,.js index.ts src/**",
     "test": "jest"

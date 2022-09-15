@@ -172,14 +172,14 @@ describe('stringifyUri', () => {
                 port: 12345
             };
             const uriStr = stringifyUri(uri);
-            expect(uriStr).toBe('sip:moominvalley.com:12345')
+            expect(uriStr).toBe('sip:moominvalley.com:12345');
         });
         it('should stringify a URI with no user and no port', () => {
             const uri = {
                 host: 'moominvalley.com',
             };
             const uriStr = stringifyUri(uri);
-            expect(uriStr).toBe('sip:moominvalley.com')
+            expect(uriStr).toBe('sip:moominvalley.com');
         });
     });
     describe('parameters', () => {
