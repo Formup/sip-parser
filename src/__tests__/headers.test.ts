@@ -104,7 +104,6 @@ describe('parse header', () => {
             expect(parameters1[0].value).toBe('1');
         }
     });
-    it.todo('should allow breaking the header on multiple lines');
 });
 
 describe('stringify header', () => {

@@ -28,7 +28,7 @@ export function parse(rawMessage: string): SIPMessage {
 }
 
 function isolateHeaderLines(messageLines: string[]): string[] {
-    const endOfHeaders = messageLines.findIndex(line => line === '\r\n');
+    const endOfHeaders = messageLines.findIndex(line => line === '');
     const headerLines = endOfHeaders === -1 ? messageLines.slice(1) : messageLines.slice(1, endOfHeaders);
 
     // Headers can be split into multiple lines. If a line starts with whitespace, it's combined to the previous line.
@@ -48,7 +48,7 @@ function isolateHeaderLines(messageLines: string[]): string[] {
 }
 
 function isolateContentLines(messageLines: string[]): string[] {
-    const endOfHeaders = messageLines.findIndex(line => line === '\r\n');
+    const endOfHeaders = messageLines.findIndex(line => line === '');
     return (endOfHeaders === -1 || endOfHeaders === messageLines.length - 1)
         ? []
         : messageLines.slice(endOfHeaders + 1);
