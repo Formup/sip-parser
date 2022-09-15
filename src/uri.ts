@@ -1,4 +1,4 @@
-import { parseNameValuePairs } from './nameValueParser';
+import { parseNameValuePairs, stringifyNameValuePairs } from './nameValueParser';
 import { SipUri } from './types';
 
 export function parseUri(uriString: string): SipUri {
@@ -18,10 +18,18 @@ export function parseUri(uriString: string): SipUri {
 
 export function stringifyUri(uri: SipUri): string {
     let sipString = 'sip:';
+
     if (uri.user)
         sipString += `${uri.user}@`;
+
     sipString += uri.host;
+
     if (uri.port)
         sipString += `:${uri.port}`
+
+    if (uri.parameters) {
+        sipString += stringifyNameValuePairs(uri.parameters);
+        sipString = `<${sipString}>`
+    }
     return sipString;
 }

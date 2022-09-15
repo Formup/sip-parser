@@ -15,3 +15,8 @@ export function parseNameValuePairs(input: string): NameValuePair[] {
     }
     return paramList;
 }
+
+export function stringifyNameValuePairs(pairs: NameValuePair[]): string {
+    const pairStrings = pairs.map(pair => `${pair.name}=${pair.value}`);
+    return ';' + pairStrings.join(';');
+}

@@ -1,4 +1,4 @@
-import { parseNameValuePairs } from '../nameValueParser';
+import { parseNameValuePairs, stringifyNameValuePairs } from '../nameValueParser';
 
 describe('name-value parser', () => {
     it('should trim whitespace', () => {
@@ -11,5 +11,20 @@ describe('name-value parser', () => {
         expect(nameValuePairs[1]).toEqual({
             name: 'hi', value: 'nebukatnesar'
         });
+    });
+});
+describe('name-value stringifier', () => {
+    it('should stringify a single name-value pair', () => {
+        let pair = [{ name: 'abc', value: 'val' }];
+        const pairString = stringifyNameValuePairs(pair);
+        expect(pairString).toBe(';abc=val');
+    });
+    it('should stringify a multiple name-value pair', () => {
+        let pair = [
+            { name: 'abc', value: 'val' },
+            { name: 'def', value: 'val2' }
+        ];
+        const pairString = stringifyNameValuePairs(pair);
+        expect(pairString).toBe(';abc=val;def=val2');
     });
 });

@@ -182,4 +182,22 @@ describe('stringifyUri', () => {
             expect(uriStr).toBe('sip:moominvalley.com')
         });
     });
+    describe('parameters', () => {
+        it('should stringify uri parameters and enclose the result in angle brackets', () => {
+            const uri = {
+                host: 'wonderland.com',
+                user: 'alice',
+                port: 65251,
+                parameters: [{
+                    name: 'hole',
+                    value: 'rabbit'
+                }, {
+                    name: 'portal',
+                    value: 'magic'
+                }]
+            };
+            const uriStr = stringifyUri(uri);
+            expect(uriStr).toBe('<sip:alice@wonderland.com:65251;hole=rabbit;portal=magic>');
+        });
+    });
 });

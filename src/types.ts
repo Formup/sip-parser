@@ -20,7 +20,7 @@ export interface SipUri {
     host: string,
     user?: string,
     port?: number,
-    parameters?: NameValuePair[] | string;
+    parameters?: NameValuePair[];
 }
 
 export interface Header {
