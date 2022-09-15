@@ -213,3 +213,13 @@ Prints:
 }
 ```
 Obviously, stringifying the resulting object returns a valid SIP response string.
+
+## Types
+You can easily import all types, if you want to use them in the definitions of your own functions and variables:
+```JavaScript
+import { types as SipTypes } from 'sip-parser';
+
+export function getHeader(message: SipTypes.SIPMessage, headerName: string): SipTypes.Header | undefined {
+    return message.headers.find(h => h.fieldName.toLocaleLowerCase() === headerName.toLocaleLowerCase());
+}
+```
