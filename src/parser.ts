@@ -3,10 +3,9 @@ import { parseUri } from './uri';
 import { SIPMessage, SIPRequest, SIPResponse } from './types';
 
 export function parse(rawMessage: string): SIPMessage {
-    const messageLines = rawMessage.split('\r\n');
-    const startLine = messageLines[0];
-    const headerLines = isolateHeaderLines(messageLines);
-    const contentLines = isolateContentLines(messageLines);
+    const startLine = isolateStartLine(rawMessage);
+    const headerLines = isolateHeaderLines(rawMessage);
+    const contentLines = isolateContentLines(rawMessage);
 
     const requestLineMatches = matchRequestLine(startLine);
     if (requestLineMatches) {
@@ -27,31 +26,39 @@ export function parse(rawMessage: string): SIPMessage {
     throw new Error('Message start line was neither a valid request line nor a valid status line: ' + startLine);
 }
 
-function isolateHeaderLines(messageLines: string[]): string[] {
-    const endOfHeaders = messageLines.findIndex(line => line === '');
-    const headerLines = endOfHeaders === -1 ? messageLines.slice(1) : messageLines.slice(1, endOfHeaders);
-
-    // Headers can be split into multiple lines. If a line starts with whitespace, it's combined to the previous line.
-    const compressedLines: string[] = [];
-    return headerLines.reduce((allLines, currentLine) => {
-        const startWhiteSpace = currentLine.match(/^\s+/);
-        if (startWhiteSpace) {
-            if (allLines.length === 0)
-                throw new Error('The first header line cannot start with a whitespace: ' + currentLine);
-
-            allLines[allLines.length-1] += ` ${currentLine.trimStart()}`;
-        } else {
-            allLines.push(currentLine);
-        }
-        return allLines;
-    }, compressedLines);
+function isolateStartLine(messageString: string): string {
+    return messageString.split('\r\n')[0];
 }
 
-function isolateContentLines(messageLines: string[]): string[] {
-    const endOfHeaders = messageLines.findIndex(line => line === '');
-    return (endOfHeaders === -1 || endOfHeaders === messageLines.length - 1)
-        ? []
-        : messageLines.slice(endOfHeaders + 1);
+function isolateHeaderLines(messageString: string): string[] {
+    const endOfHeaders = messageString.indexOf('\r\n\r\n');
+    if (endOfHeaders === -1)
+        throw new Error('Could not find an empty line indicating the end of headers.');
+
+    const headerLines = messageString.slice(0, endOfHeaders).split('\r\n').slice(1);
+
+    // Headers can be split into multiple lines. If a line starts with whitespace, it's combined to the previous line.
+    const combinedLines: string[] = [];
+    for (let line of headerLines) {
+        const startWhiteSpace = line.match(/^\s+/);
+        if (startWhiteSpace) {
+            if (combinedLines.length === 0)
+                throw new Error('The first header line cannot start with a whitespace: ' + line);
+
+            combinedLines[combinedLines.length-1] += ` ${line.trimStart()}`;
+        } else {
+            combinedLines.push(line);
+        }
+    }
+    return combinedLines;
+}
+
+function isolateContentLines(messageString: string): string[] {
+    const endOfHeaders = messageString.indexOf('\r\n\r\n');
+    if (endOfHeaders === -1)
+        throw new Error('Could not find an empty line indicating the end of headers.');
+
+    return messageString.slice(endOfHeaders + '\r\n\r\n'.length).split('\r\n');
 }
 
 function matchRequestLine(startLine: string) {

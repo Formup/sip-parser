@@ -5,9 +5,9 @@ import { stringifyHeader } from './headers';
 export function stringify(message: SIPMessage): string {
     const startLine = makeStartLine(message) + '\r\n';
     const headerLines = message.headers.map(header => stringifyHeader(header));
-    let messageString = startLine + headerLines.join('\r\n');
+    let messageString = startLine + headerLines.join('\r\n') + '\r\n\r\n';
     if (message.content?.length > 0)
-        messageString += `\r\n\r\n${message.content}`;
+        messageString += message.content;
 
     return messageString;
 }

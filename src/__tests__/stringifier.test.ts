@@ -92,13 +92,14 @@ describe('stringify', () => {
                     content: '',
                 };
                 const stringified = stringify(exampleRequest);
-                expect(stringified).toBe('ACK sip:test@google.com:2923 SIP/2.0\r\n' +
-                    'Via: SIP/2.0/UDP pc33.atlanta.com;branch=z9hG4bKkjshdyff\r\n' +
-                    'To: Bob <sip:bob@biloxi.com>;tag=99sa0xk\r\n' +
-                    'From: Alice <sip:alice@atlanta.com>;tag=88sja8x\r\n' +
-                    'Max-Forwards: 70\r\n' +
-                    'Call-ID: 987asjd97y7atg\r\n' +
-                    'CSeq: 986759 ACK');
+                const expectedResult = 'ACK sip:test@google.com:2923 SIP/2.0\r\n' +
+                'Via: SIP/2.0/UDP pc33.atlanta.com;branch=z9hG4bKkjshdyff\r\n' +
+                'To: Bob <sip:bob@biloxi.com>;tag=99sa0xk\r\n' +
+                'From: Alice <sip:alice@atlanta.com>;tag=88sja8x\r\n' +
+                'Max-Forwards: 70\r\n' +
+                'Call-ID: 987asjd97y7atg\r\n' +
+                'CSeq: 986759 ACK\r\n\r\n';
+                expect(stringified).toBe(expectedResult);
             });
         });
     });
@@ -162,7 +163,7 @@ describe('stringify', () => {
                     'CSeq: 314159 INVITE\r\n' +
                     'Contact: <sip:bob@192.0.2.4>\r\n' +
                     'Content-Type: application/sdp\r\n' +
-                    'Content-Length: 131';
+                    'Content-Length: 131\r\n\r\n';
 
                 expect(stringified).toBe(expectedResult);
             });

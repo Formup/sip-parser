@@ -14,7 +14,7 @@ describe('start line', () => {
                 'CSeq: 63104 OPTIONS\r\n' +
                 'Contact: <sip:alice@pc33.atlanta.com>\r\n' +
                 'Accept: application/sdp\r\n' +
-                'Content-Length: 0';
+                'Content-Length: 0\r\n\r\n';
             const parsed = parse(optionsRequestValid);
             expect('method' in parsed).toBeTruthy();
             expect('requestUri' in parsed).toBeTruthy();
@@ -36,7 +36,7 @@ describe('start line', () => {
                 'CSeq: 63104 OPTIONS\r\n' +
                 'Contact: <sip:alice@pc33.atlanta.com>\r\n' +
                 'Accept: application/sdp\r\n' +
-                'Content-Length: 0';
+                'Content-Length: 0\r\n\r\n';
             const parsed = parse(ipHostRequest);
             expect('method' in parsed).toBeTruthy();
             expect('requestUri' in parsed).toBeTruthy();
@@ -59,7 +59,7 @@ describe('start line', () => {
                 'CSeq: 63104 OPTIONS\r\n' +
                 'Contact: <sip:alice@pc33.atlanta.com>\r\n' +
                 'Accept: application/sdp\r\n' +
-                'Content-Length: 0';
+                'Content-Length: 0\r\n\r\n';
             const parsed = parse(optionsRequestValid);
             expect('method' in parsed).toBeTruthy();
             expect('requestUri' in parsed).toBeTruthy();
@@ -82,7 +82,7 @@ describe('start line', () => {
                 'CSeq: 63104 OPTIONS\r\n' +
                 'Contact: <sip:alice@pc33.atlanta.com>\r\n' +
                 'Accept: application/sdp\r\n' +
-                'Content-Length: 0';
+                'Content-Length: 0\r\n\r\n';
             const parsed = parse(optionsRequestValid);
             expect('method' in parsed).toBeTruthy();
             expect('requestUri' in parsed).toBeTruthy();
@@ -104,7 +104,7 @@ describe('start line', () => {
                 'CSeq: 1826 REGISTER\r\n' +
                 'Contact: <sip:bob@192.0.2.4>\r\n' +
                 'Expires: 7200\r\n' +
-                'Content-Length: 0';
+                'Content-Length: 0\r\n\r\n';
             const parsed = parse(registerRequest);
             expect('method' in parsed);
             expect('requestUri' in parsed);
@@ -127,7 +127,7 @@ describe('start line', () => {
                 'CSeq: 1826 REGISTER\r\n' +
                 'Contact: <sip:bob@192.0.2.4>\r\n' +
                 'Expires: 7200\r\n' +
-                'Content-Length: 0';
+                'Content-Length: 0\r\n\r\n';
             const parsed = parse(registerRequest);
             expect('method' in parsed);
             expect('requestUri' in parsed);
@@ -156,7 +156,7 @@ describe('start line', () => {
                 'CSeq: 314159 INVITE\r\n' +
                 'Contact: <sip:bob@192.0.2.4>\r\n' +
                 'Content-Type: application/sdp\r\n' +
-                'Content-Length: 131';
+                'Content-Length: 131\r\n\r\n';
             const parsed = parse(validResponse);
             expect('statusCode' in parsed).toBeTruthy();
             expect('reason' in parsed).toBeTruthy();
@@ -183,7 +183,7 @@ describe('header lines', () => {
             'CSeq: 314159 INVITE\r\n' +
             'Contact: <sip:bob@192.0.2.4>\r\n' +
             'Content-Type: application/sdp\r\n' +
-            'Content-Length: 131';
+            'Content-Length: 131\r\n\r\n';
         const parsed = parse(messageString);
         expect(parsed.headers.length).toBe(10);
         expect(parsed.headers[0]).toEqual({
@@ -212,7 +212,7 @@ describe('header lines', () => {
             '         pick up the phone\r\n' +
             '         and answer!\r\n' +
             'Call-ID: 987asjd97y7atg\r\n' +
-            'CSeq: 986759 INVITE';
+            'CSeq: 986759 INVITE\r\n\r\n';
         const parsed = parse(messageString);
         expect(parsed.headers.length).toBe(7);
         expect(parsed.headers[4]).toEqual({
@@ -220,4 +220,23 @@ describe('header lines', () => {
         });
     });
 });
-
+describe('empty line', () => {
+    it('should not parse if en empty line is missing after the headers', () => {
+        const messageString =
+            'SIP/2.0 200 OK\r\n' +
+            'Via: SIP/2.0/UDP server10.biloxi.com\r\n' +
+            '   ;branch=z9hG4bKnashds8;received=192.0.2.3\r\n' +
+            'Via: SIP/2.0/UDP bigbox3.site3.atlanta.com\r\n' +
+            '   ;branch=z9hG4bK77ef4c2312983.1;received=192.0.2.2\r\n' +
+            'Via: SIP/2.0/UDP pc33.atlanta.com\r\n' +
+            '   ;branch=z9hG4bK776asdhds ;received=192.0.2.1\r\n' +
+            'To: Bob <sip:bob@biloxi.com>;tag=a6c85cf\r\n' +
+            'From: Alice <sip:alice@atlanta.com>;tag=1928301774\r\n' +
+            'Call-ID: a84b4c76e66710@pc33.atlanta.com\r\n' +
+            'CSeq: 314159 INVITE\r\n' +
+            'Contact: <sip:bob@192.0.2.4>\r\n' +
+            'Content-Type: application/sdp\r\n' +
+            'Content-Length: 131';
+        expect(() => parse(messageString)).toThrowError('an empty line');
+    });
+})
