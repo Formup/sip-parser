@@ -39,7 +39,7 @@ function isolateHeaderLines(messageString: string): string[] {
 
     // Headers can be split into multiple lines. If a line starts with whitespace, it's combined to the previous line.
     const combinedLines: string[] = [];
-    for (let line of headerLines) {
+    for (const line of headerLines) {
         const startWhiteSpace = line.match(/^\s+/);
         if (startWhiteSpace) {
             if (combinedLines.length === 0)

@@ -239,4 +239,4 @@ describe('empty line', () => {
             'Content-Length: 131';
         expect(() => parse(messageString)).toThrowError('an empty line');
     });
-})
+});
