@@ -28,13 +28,45 @@ function splitHeaderValues(valuesString: string): string[] {
 }
 
 function matchHeaderLine(headerLine: string) {
-    // Matches the field name and the entire field value, including potentially multiple header values with parameters.
+    // Returns two groups:
+    // 1. Header name
+    // 2. All values that come after the colon
     return headerLine.match(/([A-Za-z-]+):([\w\s\-;,=~<>!@:./"]+)/);
 }
 
 function splitFieldValueAndParams(headerValue: string): string[] {
-    // Matches the header value, potentially with whitespace in the middle, followed by parameters.
-    return headerValue.split(/(?<!<[^>]*);(?![^<]*>)/);
+    // Returns two strings:
+    // 1. Header field value
+    // 2. (Optional) The parameter string of the header value, if exists
+    // We want to split the input from the position of the first semicolon that is not between angled brackets.
+    // We avoid using regex lookbehind, because it's still not fully supported by JavaScriptCore (engine running
+    // Safari and React Native, for instance).
+    // Instead, we traverse the string character by character and keep track of angled brackets on the go.
+    let splitIndex = -1;
+    let openAngledBrackets = 0;
+    for (let i = 0; i < headerValue.length; i++) {
+        const char = headerValue[i];
+        if (char === '<') {
+            openAngledBrackets++;
+            continue;
+        }
+        if (openAngledBrackets === 0) {
+            if (char === ';') {
+                splitIndex = i;
+                break;
+            }
+        }
+        else if (headerValue[i] === '>') {
+            openAngledBrackets--;
+        }
+    }
+    if (splitIndex === -1)
+        return [headerValue];
+
+    if (splitIndex === 0)
+        throw new Error('Invalid header value, cannot start with a semicolon: ' + headerValue.slice(10));
+
+    return [headerValue.slice(0, splitIndex), headerValue.slice(splitIndex + 1)];
 }
 
 export function stringifyHeader(header: Header): string {
