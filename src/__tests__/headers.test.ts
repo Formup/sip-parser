@@ -113,7 +113,7 @@ describe('parse header', () => {
         expect(parsedHeaders.length).toBe(1);
         expect(parsedHeaders[0].fieldName).toBe('WWW-Authenticate');
         expect(parsedHeaders[0].fieldValue).toBe('Digest');
-        expect(parsedHeaders[0].parameters).toBe([{
+        expect(parsedHeaders[0].parameters).toStrictEqual([{
             name: 'realm', value: 'atlanta.com'
         }, {
             name: 'domain', value: 'sip:boxesbybob.com'
@@ -127,7 +127,7 @@ describe('parse header', () => {
             name: 'stale', value: 'FALSE'
         }, {
             name: 'algorithm', value: 'MD5'
-        }])
+        }]);
     });
     it.todo('should handle WWW-Authenticate when qop has multiple values');
     it.todo('should handle Authorization comma separated values as parameters');

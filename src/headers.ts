@@ -7,8 +7,24 @@ export function parseHeaderLine(headerLine: string): Header[] {
         throw new Error('Invalid header line ' + headerLine);
 
     const headerName = headerNameAndValues[1].trim();
-    const headerValues = splitHeaderValues(headerNameAndValues[2]);
+    const authHeaderNames = [
+        'www-authenticate', 'authorization',
+        'proxy-authenticate', 'proxy-authorization'
+    ];
+    if (authHeaderNames.includes(headerName.toLowerCase())) {
+        return [parseAuthHeaderLine(headerName, headerNameAndValues[2])];
+    } else {
+        return parseNormalHeaderLine(headerName, headerNameAndValues[2]);
+    }
+}
+
+function parseNormalHeaderLine(headerName: string, fullHeaderValueString: string) {
+    const headerValues = splitNormalHeaderValues(fullHeaderValueString);
     return headerValues.map(headerVal => buildSingleHeader(headerName, headerVal));
+}
+
+function splitNormalHeaderValues(valuesString: string): string[] {
+    return valuesString.split(',').map(part => part.trim());
 }
 
 function buildSingleHeader(headerName: string, headerValue: string): Header {
@@ -23,8 +39,21 @@ function buildSingleHeader(headerName: string, headerValue: string): Header {
     };
 }
 
-function splitHeaderValues(valuesString: string): string[] {
-    return valuesString.split(',').map(part => part.trim());
+// Auth-related strings must be handles differently, as explained in RFC3261 chapter 7.3.1
+function parseAuthHeaderLine(headerName: string, headerValueString: string) {
+    const headerAndParams = splitAuthFieldValueAndParams(headerValueString);
+    if (headerAndParams == null) {
+        throw new Error(`Invalid authentication header ${headerName} ${headerValueString}`);
+    }
+    const headerValue = headerAndParams[1].trim();
+    const headerParamsString = headerAndParams[2];
+    const headerParamPieces = headerParamsString.split(',');
+    const headerParams = headerParamPieces.flatMap(piece => parseNameValuePairs(piece.replaceAll('"', '')));
+    return {
+        fieldName: headerName,
+        fieldValue: headerValue,
+        parameters: headerParams,
+    };
 }
 
 function matchHeaderLine(headerLine: string) {
@@ -35,6 +64,10 @@ function matchHeaderLine(headerLine: string) {
 function splitFieldValueAndParams(headerValue: string): string[] {
     // Matches the header value, potentially with whitespace in the middle, followed by parameters.
     return headerValue.split(/(?<!<[^>]*);(?![^<]*>)/);
+}
+
+function splitAuthFieldValueAndParams(headerValue: string) {
+    return headerValue.match(/([A-Za-z-]+)\s+([\w\s\-,~!<>="@:.\/]+)/);
 }
 
 export function stringifyHeader(header: Header): string {
