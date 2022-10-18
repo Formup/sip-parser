@@ -1,6 +1,6 @@
-import { parseNameValuePairs } from './nameValueParser';
+import { parseNameValuePairs, stringifyNameValuePairs } from './nameValueParser';
 import { splitIfNotBetween } from './stringUtils';
-import { Header } from './types';
+import { Header, NameValuePair } from './types';
 
 export function parseHeaderLine(headerLine: string): Header[] {
     const headerNameAndValues = matchHeaderLine(headerLine);
@@ -8,11 +8,7 @@ export function parseHeaderLine(headerLine: string): Header[] {
         throw new Error('Invalid header line ' + headerLine);
 
     const headerName = headerNameAndValues[1].trim();
-    const authHeaderNames = [
-        'www-authenticate', 'authorization',
-        'proxy-authenticate', 'proxy-authorization'
-    ];
-    if (authHeaderNames.includes(headerName.toLowerCase())) {
+    if (isAuthHeader(headerName)) {
         return [parseAuthHeaderLine(headerName, headerNameAndValues[2])];
     } else {
         return parseNormalHeaderLine(headerName, headerNameAndValues[2]);
@@ -106,10 +102,27 @@ function splitAuthFieldValueAndParams(headerValue: string) {
 
 export function stringifyHeader(header: Header): string {
     const parameterless = `${header.fieldName}: ${header.fieldValue}`;
-    let parameters = '';
+
     if (header.parameters && header.parameters.length > 0) {
-        const keyValueStrings = header.parameters.map(param => `${param.name}=${param.value}`);
-        parameters = ';' + keyValueStrings.join(';');
+        const parameters = isAuthHeader(header.fieldName) ? stringifyAuthHeaderParams(header.parameters) : stringifyNameValuePairs(header.parameters);
+        return parameterless + parameters;
     }
-    return parameterless + parameters;
+    return parameterless;
+}
+
+function stringifyAuthHeaderParams(params: NameValuePair[]) {
+    const noQuotesValues = ['algorithm', 'stale'];
+    const paramStrings = params.map(pair => {
+        const quotedParamValue = noQuotesValues.includes(pair.name.toLowerCase()) ? pair.value : `"${pair.value}"`;
+        return `${pair.name}=${quotedParamValue}`;
+    });
+    return ' ' + paramStrings.join(', ');
+}
+
+function isAuthHeader(headerName: string) {
+    const authHeaderNames = [
+        'www-authenticate', 'authorization',
+        'proxy-authenticate', 'proxy-authorization'
+    ];
+    return authHeaderNames.includes(headerName.toLowerCase().trim());
 }

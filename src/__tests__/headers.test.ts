@@ -262,4 +262,60 @@ describe('stringify header', () => {
         const stringified = stringifyHeader(header);
         expect(stringified).toBe('From: Alice <sip:alice@atlanta.com>;tag=88sja8x;custom=abc123');
     });
+    it('should separate auth header parameters with commas', () => {
+        const header = {
+            fieldName: 'Proxy-Authenticate',
+            fieldValue: 'Digest',
+            parameters: [{
+                name: 'realm', value: 'atlanta.com'
+            }, {
+                name: 'domain', value: 'sip:ss1.carrier.com'
+            }, {
+                name: 'qop', value: 'auth'
+            }, {
+                name: 'nonce', value: 'f84f1cec41e6cbe5aea9c8e88d359'
+            }, {
+                name: 'opaque', value: ''
+            }, {
+                name: 'stale', value: 'false'
+            }, {
+                name: 'algorithm', value: 'MD5'
+            }],
+        };
+        const stringified = stringifyHeader(header);
+
+        const expectedHeaderLine = 'Proxy-Authenticate: Digest realm="atlanta.com", ' +
+            'domain="sip:ss1.carrier.com", qop="auth", ' +
+            'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
+            'opaque="", stale=false, algorithm=MD5';
+        expect(stringified).toBe(expectedHeaderLine);
+    });
+    it('should deal with multiple qop values in auth header', () => {
+        const header = {
+            fieldName: 'www-authenticate',
+            fieldValue: 'Digest',
+            parameters: [{
+                name: 'realm', value: 'atlanta.com'
+            }, {
+                name: 'domain', value: 'sip:boxesbybob.com'
+            }, {
+                name: 'qop', value: 'auth,auth-int'
+            }, {
+                name: 'nonce', value: 'f84f1cec41e6cbe5aea9c8e88d359'
+            }, {
+                name: 'opaque', value: ''
+            }, {
+                name: 'stale', value: 'FALSE'
+            }, {
+                name: 'algorithm', value: 'MD5'
+            }],
+        };
+        const stringified = stringifyHeader(header);
+
+        const expectedHeaderLine = 'www-authenticate: Digest realm="atlanta.com", ' +
+            'domain="sip:boxesbybob.com", qop="auth,auth-int", ' +
+            'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
+            'opaque="", stale=FALSE, algorithm=MD5';
+        expect(stringified).toBe(expectedHeaderLine);
+    });
 });
