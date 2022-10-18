@@ -172,8 +172,49 @@ describe('parse header', () => {
             name: 'response', value: '7587245234b3434cc3412213e5f113a5432'
         }]);
     });
-    it.todo('should handle Proxy-Authenticate comma separated values as parameters');
-    it.todo('should handle Proxy-Authorization comma separated values as parameters');
+    it('should handle Proxy-Authenticate comma separated values as parameters', () => {
+        const headerLine = 'Proxy-Authenticate: Digest realm="atlanta.com", ' +
+            'domain="sip:ss1.carrier.com", qop="auth", ' +
+            'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
+            'opaque="", stale=FALSE, algorithm=MD5';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].fieldName).toBe('Proxy-Authenticate');
+        expect(parsedHeaders[0].fieldValue).toBe('Digest');
+        expect(parsedHeaders[0].parameters).toStrictEqual([{
+            name: 'realm', value: 'atlanta.com'
+        }, {
+            name: 'domain', value: 'sip:ss1.carrier.com'
+        }, {
+            name: 'qop', value: 'auth'
+        }, {
+            name: 'nonce', value: 'f84f1cec41e6cbe5aea9c8e88d359'
+        }, {
+            name: 'opaque', value: ''
+        }, {
+            name: 'stale', value: 'FALSE'
+        }, {
+            name: 'algorithm', value: 'MD5'
+        }]);
+    });
+    it('should handle Proxy-Authorization comma separated values as parameters', () => {
+        const headerLine = 'Proxy-Authorization: Digest username="Alice", realm="atlanta.com", ' +
+            'nonce="c60f3082ee1212b402a21831ae", ' +
+            'response="245f23415f11432b3434341c022"';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].fieldName).toBe('Proxy-Authorization');
+        expect(parsedHeaders[0].fieldValue).toBe('Digest');
+        expect(parsedHeaders[0].parameters).toStrictEqual([{
+            name: 'username', value: 'Alice'
+        }, {
+            name: 'realm', value: 'atlanta.com'
+        }, {
+            name: 'nonce', value: 'c60f3082ee1212b402a21831ae'
+        }, {
+            name: 'response', value: '245f23415f11432b3434341c022'
+        }]);
+    });
 });
 
 describe('stringify header', () => {
