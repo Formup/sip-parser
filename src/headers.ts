@@ -101,7 +101,7 @@ function parseAuthHeaderLine(headerName: string, headerValueString: string) {
 }
 
 function splitAuthFieldValueAndParams(headerValue: string) {
-    return headerValue.match(/([A-Za-z-]+)\s+([\w\s\-,~!<>="@:.\/]+)/);
+    return headerValue.match(/([A-Za-z-]+)\s+([\w\s\-,~!<>="@:./]+)/);
 }
 
 export function stringifyHeader(header: Header): string {
