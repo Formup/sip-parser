@@ -1,4 +1,5 @@
 import { parseNameValuePairs } from './nameValueParser';
+import { splitIfNotBetween } from './stringUtils';
 import { Header } from './types';
 
 export function parseHeaderLine(headerLine: string): Header[] {
@@ -36,23 +37,6 @@ function buildSingleHeader(headerName: string, headerValue: string): Header {
         fieldName: headerName,
         fieldValue: fieldValue,
         parameters: parameters.length > 0 ? parameters : undefined,
-    };
-}
-
-// Auth-related strings must be handles differently, as explained in RFC3261 chapter 7.3.1
-function parseAuthHeaderLine(headerName: string, headerValueString: string) {
-    const headerAndParams = splitAuthFieldValueAndParams(headerValueString);
-    if (headerAndParams == null) {
-        throw new Error(`Invalid authentication header ${headerName} ${headerValueString}`);
-    }
-    const headerValue = headerAndParams[1].trim();
-    const headerParamsString = headerAndParams[2];
-    const headerParamPieces = headerParamsString.split(',');
-    const headerParams = headerParamPieces.flatMap(piece => parseNameValuePairs(piece.replaceAll('"', '')));
-    return {
-        fieldName: headerName,
-        fieldValue: headerValue,
-        parameters: headerParams,
     };
 }
 
@@ -96,6 +80,24 @@ function splitFieldValueAndParams(headerValue: string): string[] {
         throw new Error('Invalid header value, cannot start with a semicolon: ' + headerValue.slice(10));
 
     return [headerValue.slice(0, splitIndex), headerValue.slice(splitIndex + 1)];
+}
+
+// Auth-related strings must be handles differently, as explained in RFC3261 chapter 7.3.1
+function parseAuthHeaderLine(headerName: string, headerValueString: string) {
+    const headerAndParams = splitAuthFieldValueAndParams(headerValueString);
+    if (headerAndParams == null) {
+        throw new Error(`Invalid authentication header ${headerName} ${headerValueString}`);
+    }
+    const headerValue = headerAndParams[1].trim();
+    const headerParamsString = headerAndParams[2].trim();
+    // const headerParamPieces = headerParamsString.split(',');
+    const headerParamPieces = splitIfNotBetween(headerParamsString, ',', '"');
+    const headerParams = headerParamPieces.flatMap(piece => parseNameValuePairs(piece.replaceAll('"', '')));
+    return {
+        fieldName: headerName,
+        fieldValue: headerValue,
+        parameters: headerParams,
+    };
 }
 
 function splitAuthFieldValueAndParams(headerValue: string) {

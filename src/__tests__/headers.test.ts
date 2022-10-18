@@ -105,10 +105,10 @@ describe('parse header', () => {
         }
     });
     it('should handle WWW-Authenticate comma separated values as parameters', () => {
-        const headerLine = 'WWW-Authenticate: Digest realm="atlanta.com",\r\n' +
-            '    domain="sip:boxesbybob.com", qop="auth",\r\n' +
-            '    nonce="f84f1cec41e6cbe5aea9c8e88d359",\r\n' +
-            '    opaque="", stale=FALSE, algorithm=MD5';
+        const headerLine = 'WWW-Authenticate: Digest realm="atlanta.com", ' +
+            'domain="sip:boxesbybob.com", qop="auth", ' +
+            'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
+            'opaque="", stale=FALSE, algorithm=MD5';
         const parsedHeaders = parseHeaderLine(headerLine);
         expect(parsedHeaders.length).toBe(1);
         expect(parsedHeaders[0].fieldName).toBe('WWW-Authenticate');
@@ -129,8 +129,49 @@ describe('parse header', () => {
             name: 'algorithm', value: 'MD5'
         }]);
     });
-    it.todo('should handle WWW-Authenticate when qop has multiple values');
-    it.todo('should handle Authorization comma separated values as parameters');
+    it('should handle WWW-Authenticate when qop has multiple values', () => {
+        const headerLine = 'WWW-Authenticate: Digest realm="atlanta.com", ' +
+            'domain="sip:boxesbybob.com", qop="auth,auth-int", ' +
+            'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
+            'opaque="", stale=FALSE, algorithm=MD5';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].fieldName).toBe('WWW-Authenticate');
+        expect(parsedHeaders[0].fieldValue).toBe('Digest');
+        expect(parsedHeaders[0].parameters).toStrictEqual([{
+            name: 'realm', value: 'atlanta.com'
+        }, {
+            name: 'domain', value: 'sip:boxesbybob.com'
+        }, {
+            name: 'qop', value: 'auth,auth-int'
+        }, {
+            name: 'nonce', value: 'f84f1cec41e6cbe5aea9c8e88d359'
+        }, {
+            name: 'opaque', value: ''
+        }, {
+            name: 'stale', value: 'FALSE'
+        }, {
+            name: 'algorithm', value: 'MD5'
+        }]);
+    });
+    it('should handle Authorization comma separated values as parameters', () => {
+        const headerLine = 'Authorization: Digest username="Alice", realm="atlanta.com", ' +
+            'nonce="84a4cc6f3082121f32b42a2187831a9e", ' +
+            'response="7587245234b3434cc3412213e5f113a5432"';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].fieldName).toBe('Authorization');
+        expect(parsedHeaders[0].fieldValue).toBe('Digest');
+        expect(parsedHeaders[0].parameters).toStrictEqual([{
+            name: 'username', value: 'Alice'
+        }, {
+            name: 'realm', value: 'atlanta.com'
+        }, {
+            name: 'nonce', value: '84a4cc6f3082121f32b42a2187831a9e'
+        }, {
+            name: 'response', value: '7587245234b3434cc3412213e5f113a5432'
+        }]);
+    });
     it.todo('should handle Proxy-Authenticate comma separated values as parameters');
     it.todo('should handle Proxy-Authorization comma separated values as parameters');
 });
