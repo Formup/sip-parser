@@ -31,5 +31,5 @@ export interface Header {
 
 export interface NameValuePair {
     name: string,
-    value: string,
+    value?: string,
 }
