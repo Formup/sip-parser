@@ -113,11 +113,10 @@ export function stringifyHeader(header: Header): string {
 function stringifyAuthHeaderParams(params: NameValuePair[]) {
     const noQuotesValues = ['algorithm', 'stale'];
     const paramStrings = params.map(pair => {
-        if (pair.value) {
-            const quotedParamValue = noQuotesValues.includes(pair.name.toLowerCase()) ? pair.value : `"${pair.value}"`;
-            return `${pair.name}=${quotedParamValue}`;
-        }
-        return pair.name;
+        const quotedParamValue = noQuotesValues.includes(pair.name.toLowerCase()) ?
+            (pair.value || '') :
+            `"${pair.value || ''}"`;
+        return `${pair.name}=${quotedParamValue}`;
     });
     return ' ' + paramStrings.join(', ');
 }

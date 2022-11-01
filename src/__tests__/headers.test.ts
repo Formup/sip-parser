@@ -330,19 +330,19 @@ describe('stringify header', () => {
             'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
             'opaque="", stale=FALSE, algorithm=MD5';
         expect(stringified).toBe(expectedHeaderLine);
-        it('should add valueless parameters (rport) with only the header', () => {
-            const header = {
-                fieldName: 'Via',
-                fieldValue: 'SIP/2.0/TCP 192.168.1.123:5062',
-                parameters: [{
-                    name: 'rport'
-                }, {
-                    name: 'branch',
-                    value: 'z9hG4bK1503810621'
-                }]
-            };
-            const stringified = stringifyHeader(header);
-            expect(stringified).toBe('Via: SIP/2.0/TCP 192.168.1.123:5062;rport;branch=z9hG4bK1503810621');
-        });
+    });
+    it('should add valueless parameters (rport) with only the header', () => {
+        const header = {
+            fieldName: 'Via',
+            fieldValue: 'SIP/2.0/TCP 192.168.1.123:5062',
+            parameters: [{
+                name: 'rport'
+            }, {
+                name: 'branch',
+                value: 'z9hG4bK1503810621'
+            }]
+        };
+        const stringified = stringifyHeader(header);
+        expect(stringified).toBe('Via: SIP/2.0/TCP 192.168.1.123:5062;rport;branch=z9hG4bK1503810621');
     });
 });
