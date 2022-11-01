@@ -17,6 +17,11 @@ export function parseNameValuePairs(input: string): NameValuePair[] {
 }
 
 export function stringifyNameValuePairs(pairs: NameValuePair[]): string {
-    const pairStrings = pairs.map(pair => `${pair.name}=${pair.value}`);
+    const pairStrings = pairs.map(pair => {
+        if (!pair.value) {
+            return pair.name;
+        }
+        return `${pair.name}=${pair.value}`;
+    });
     return ';' + pairStrings.join(';');
 }
