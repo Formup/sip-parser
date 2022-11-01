@@ -41,7 +41,7 @@ describe('parse header', () => {
         expect(parsedHeaders.length).toBe(1);
         expect(parsedHeaders[0].parameters).toBeUndefined();
     });
-    it('should allow parameters headers', () => {
+    it('should allow parameters in headers', () => {
         const headerLine = 'From: "Bob" <sips:bob@biloxi.com> ;tag=a48s';
         const parsedHeaders = parseHeaderLine(headerLine);
         expect(parsedHeaders.length).toBe(1);
@@ -66,6 +66,19 @@ describe('parse header', () => {
             expect(parsedHeaders[0].parameters[0].value).toBe('192.0.2.207');
             expect(parsedHeaders[0].parameters[1].name).toBe('branch');
             expect(parsedHeaders[0].parameters[1].value).toBe('z9hG4bK77asjd');
+        }
+    });
+    it('should allow valueless parameters (rport) for headers', () => {
+        const headerLine = 'Via: SIP/2.0/TCP 192.168.1.123:5062;rport;branch=z9hG4bK1503810621';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].parameters).toBeDefined();
+        expect(parsedHeaders[0].parameters?.length).toBe(2);
+        if (parsedHeaders[0].parameters) {
+            expect(parsedHeaders[0].parameters[0].name).toBe('rport');
+            expect(parsedHeaders[0].parameters[0].value).toBeUndefined();
+            expect(parsedHeaders[0].parameters[1].name).toBe('branch');
+            expect(parsedHeaders[0].parameters[1].value).toBe('z9hG4bK1503810621');
         }
     });
     it('should allow URI with parameters in the header value', () => {
@@ -317,5 +330,18 @@ describe('stringify header', () => {
             'nonce="f84f1cec41e6cbe5aea9c8e88d359", ' +
             'opaque="", stale=FALSE, algorithm=MD5';
         expect(stringified).toBe(expectedHeaderLine);
+    it('should add valueless parameters (rport) with only the header', () => {
+        const header = {
+            fieldName: 'Via',
+            fieldValue: 'SIP/2.0/TCP 192.168.1.123:5062',
+            parameters: [{
+                name: 'rport'
+            }, {
+                name: 'branch',
+                value: 'z9hG4bK1503810621'
+            }]
+        };
+        const stringified = stringifyHeader(header);
+        expect(stringified).toBe( 'Via: SIP/2.0/TCP 192.168.1.123:5062;rport;branch=z9hG4bK1503810621');
     });
 });
