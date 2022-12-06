@@ -40,7 +40,7 @@ function matchHeaderLine(headerLine: string) {
     // Returns two groups:
     // 1. Header name
     // 2. All values that come after the colon
-    return headerLine.match(/([A-Za-z-]+):([\w\s\-;,=~<>!@:./"]+)/);
+    return headerLine.match(/([A-Za-z-]+):(.+)/);
 }
 
 function splitFieldValueAndParams(headerValue: string): string[] {

@@ -41,6 +41,12 @@ describe('parse header', () => {
         expect(parsedHeaders.length).toBe(1);
         expect(parsedHeaders[0].parameters).toBeUndefined();
     });
+    it('should "special" characters in header value', () => {
+        const headerLine = 'Route: Alice <sip:*888(23)~3!me@atlanta.com>';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(1);
+        expect(parsedHeaders[0].fieldValue).toBe('Alice <sip:*888(23)~3!me@atlanta.com>');
+    });
     it('should allow parameters in headers', () => {
         const headerLine = 'From: "Bob" <sips:bob@biloxi.com> ;tag=a48s';
         const parsedHeaders = parseHeaderLine(headerLine);
