@@ -47,6 +47,18 @@ describe('parseUri', () => {
                 host: '192.168.1.16',
             });
         });
+        it('should handle a separate username outside the angle brackets', () => {
+            const fullUserUri = '"Mr. Watson" <sip:watson@worcester.bell-telephone.com>';
+            const uri = parseUri(fullUserUri);
+            expect(uri.user).toBe('watson');
+            expect(uri.host).toBe('worcester.bell-telephone.com');
+        });
+        it('should deal with angle brackets', () => {
+            const fullUserUri = '<sip:callee@u2.rightprivatespace.com>';
+            const uri = parseUri(fullUserUri);
+            expect(uri.user).toBe('callee');
+            expect(uri.host).toBe('u2.rightprivatespace.com');
+        });
         it.todo('should parse special allowed characters in the user name');
         it.todo('should not allow characters that are not allowed in the RFC');
     });
