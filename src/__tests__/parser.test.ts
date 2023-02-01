@@ -139,6 +139,36 @@ describe('start line', () => {
                 expect(parsed.headers.length).toBe(9);
             }
         });
+        it('should handle start line with a user with a dot in their name', () => {
+            const inviteRequest = 'INVITE sip:1795884931.de57b3c011@192.168.1.103:37991 SIP/2.0\r\n' +
+                'Via: SIP/2.0/TCP 192.168.1.102:5060;branch=z9hG4bK81de0774\r\n' +
+                'Via: SIP/2.0/TCP 192.168.1.100:5063;rport;branch=z9hG4bK102194941\r\n' +
+                'From: "179987428f" <sip:179987428f@192.168.1.104>;tag=697098435\r\n' +
+                'To: <sip:1@192.168.1.104>\r\n' +
+                'Call-ID: 1795884931\r\n' +
+                'CSeq: 21 INVITE\r\n' +
+                'Contact: <sip:179987428f@192.168.1.100:5063;transport=TCP>\r\n' +
+                'Content-Type: application/sdp\r\n' +
+                'Allow: INVITE\r\n' +
+                'Max-Forwards: 69\r\n' +
+                'User-Agent: R28 28.31.2.208 0C11050C358C\r\n' +
+                'Subject: call invite\r\n' +
+                'Supported: replaces\r\n' +
+                'Allow-Events: talk\r\n' +
+                'Content-Length: 0\r\n\r\n'
+
+            const parsed = parse(inviteRequest);
+            expect('method' in parsed).toBeTruthy();
+            expect('requestUri' in parsed).toBeTruthy();
+            if ('method' in parsed && 'requestUri' in parsed) {
+                expect(parsed.method).toBe('INVITE');
+                expect(parsed.requestUri).toEqual({
+                    user: '1795884931.de57b3c011',
+                    host: '192.168.1.103',
+                    port: 37991,
+                });
+            }
+        });
         it.todo('should handle a user with unescaped, allowed special characters');
         it.todo('should handle a user with escaped special characters');
         it.todo('should throw an error for a version other than 2.0');
