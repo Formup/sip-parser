@@ -155,7 +155,7 @@ describe('start line', () => {
                 'Subject: call invite\r\n' +
                 'Supported: replaces\r\n' +
                 'Allow-Events: talk\r\n' +
-                'Content-Length: 0\r\n\r\n'
+                'Content-Length: 0\r\n\r\n';
 
             const parsed = parse(inviteRequest);
             expect('method' in parsed).toBeTruthy();
