@@ -59,6 +59,11 @@ describe('parseUri', () => {
             expect(uri.user).toBe('callee');
             expect(uri.host).toBe('u2.rightprivatespace.com');
         });
+        it('should find username that has a dot in it', () => {
+            const fullUserUri = 'sip:313877858.bc4808dd20@192.168.1.103:37311';
+            const uri = parseUri(fullUserUri);
+            expect(uri.user).toBe('313877858.bc4808dd20');
+        });
         it.todo('should parse special allowed characters in the user name');
         it.todo('should not allow characters that are not allowed in the RFC');
     });
@@ -76,6 +81,12 @@ describe('parseUri', () => {
             const validUri = 'sip:tester@192.168.1.16:5060';
             const uri = parseUri(validUri);
             expect(uri.host).toBe('192.168.1.16');
+        });
+        it('should find the host if the username has a dot', () => {
+            const fullUserUri = 'sip:313877858.bc4808dd20@192.168.1.103:37311';
+            const uri = parseUri(fullUserUri);
+            expect(uri.host).toBe('192.168.1.103');
+            expect(uri.port).toBe(37311);
         });
         it.todo('should parse a hostname with all the allowed characters');
         it.todo('should reject a hostname with illegal characters');

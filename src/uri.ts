@@ -3,7 +3,7 @@ import { SipUri } from './types';
 
 export function parseUri(uriString: string): SipUri {
     // Matches the username, the host and optionally a port.
-    const uriMatches = uriString.match(/sip:(?:(\w+)@)?([\w.-]+)(?::?(\d+))?(?:;([\w.\-=;]+))?/);
+    const uriMatches = uriString.match(/sip:(?:([\w\.]+)@)?([\w.-]+)(?::?(\d+))?(?:;([\w.\-=;]+))?/);
     if (!uriMatches)
         throw new Error('Given string was not a valid URI: ' + uriString);
 
