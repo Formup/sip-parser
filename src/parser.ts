@@ -63,7 +63,7 @@ function isolateContentLines(messageString: string): string[] {
 
 function matchRequestLine(startLine: string) {
     // Matches the method, request URI and SIP version.
-    return startLine.match(/([A-Za-z]+)\s(sip:(?:[\w.-]+@)?[\w\-.]+(?::\d+)?)\sSIP\/(\d\.\d)/);
+    return startLine.match(/([A-Za-z]+)\s(sips?:(?:[\w.-]+@)?[\w\-.]+(?::\d+)?)\sSIP\/(\d\.\d)/);
 }
 
 function matchStatusLine(startLine: string) {

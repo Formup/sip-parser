@@ -34,6 +34,36 @@ describe('stringify', () => {
                 const stringified = stringify(exampleRequest);
                 expect(stringified.startsWith('ACK sip:test@google.com SIP/2.0\r\n')).toBe(true);
             });
+            it('should stringify secure SIP', () => {
+                // This request is build based on the example on page 130 of RFC 3261.
+                const exampleRequest = {
+                    method: 'ACK',
+                    requestUri: { user: 'test', host: 'google.com', secure: true },
+                    version: '2.0',
+                    headers: [{
+                        fieldName: 'Via',
+                        fieldValue: 'SIP/2.0/UDP pc33.atlanta.com',
+                        parameters: [{ name: 'branch', value: 'z9hG4bKkjshdyff' }],
+                    }, {
+                        fieldName: 'To',
+                        fieldValue: 'Bob <sip:bob@biloxi.com>',
+                        parameters: [{ name: 'tag', value: '99sa0xk' }],
+                    }, {
+                        fieldName: 'From',
+                        fieldValue: 'Alice <sip:alice@atlanta.com>',
+                        parameters: [{ name: 'tag', value: '88sja8x' }],
+                    }, {
+                        fieldName: 'Max-Forwards', fieldValue: '70'
+                    }, {
+                        fieldName: 'Call-ID', fieldValue: '987asjd97y7atg'
+                    }, {
+                        fieldName: 'CSeq', fieldValue: '986759 ACK'
+                    }],
+                    content: '',
+                };
+                const stringified = stringify(exampleRequest);
+                expect(stringified.startsWith('ACK sips:test@google.com SIP/2.0\r\n')).toBe(true);
+            });
             it('should stringify the startline with a defined port', () => {
                 const exampleRequest = {
                     method: 'ACK',

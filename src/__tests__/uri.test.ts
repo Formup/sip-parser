@@ -11,6 +11,18 @@ describe('parseUri', () => {
             expect(() => parseUri(malformedUri3)).toThrowError('not a valid');
         });
     });
+    describe('secure SIP', () => {
+        it('should parse a secure SIP URI', () => {
+            const secureUri = 'sips:alice@chicago.com';
+            const uri = parseUri(secureUri);
+            expect(uri.secure).toBeTruthy();
+        });
+        it('should parse an unsecure SIP URI', () => {
+            const secureUri = 'sip:alice@chicago.com';
+            const uri = parseUri(secureUri);
+            expect(uri.secure).toBeFalsy();
+        });
+    });
     describe('user', () => {
         it('should parse an alphanumeric username', () => {
             const validUri = 'sip:alice@chicago.com';

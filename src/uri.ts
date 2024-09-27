@@ -1,23 +1,26 @@
 import { parseNameValuePairs, stringifyNameValuePairs } from './nameValueParser';
 import { SipUri } from './types';
 
+const SipUriRegexp = /sip(?<secure>s?):(?:(?<user>[^@]+)@)?(?<host>[\w.-]+)(?::?(?<port>\d+))?(?:;(?<params>[\w.\-=;]+))?/u;
+
 export function parseUri(uriString: string): SipUri {
     // Matches the username, the host and optionally a port.
-    const uriMatches = uriString.match(/sip:(?:([\w.]+)@)?([\w.-]+)(?::?(\d+))?(?:;([\w.\-=;]+))?/);
-    if (!uriMatches)
+    const uriMatches = uriString.match(SipUriRegexp);
+    if (!uriMatches || !uriMatches.groups)
         throw new Error('Given string was not a valid URI: ' + uriString);
 
-    const params = parseNameValuePairs(uriMatches[4]);
+    const params = parseNameValuePairs(uriMatches.groups.params);
     return {
-        user: uriMatches[1],
-        host: uriMatches[2],
-        port: uriMatches[3] ? parseInt(uriMatches[3]) : undefined,
+        secure: uriMatches.groups.secure === 's' || undefined,
+        user: uriMatches.groups.user,
+        host: uriMatches.groups.host,
+        port: uriMatches.groups.port ? parseInt(uriMatches.groups.port) : undefined,
         parameters: params.length > 0 ? params : undefined,
     };
 }
 
 export function stringifyUri(uri: SipUri): string {
-    let sipString = 'sip:';
+    let sipString = `sip${uri.secure === true ? 's' : ''}:`;
 
     if (uri.user)
         sipString += `${uri.user}@`;
