@@ -130,7 +130,7 @@ CSeq: 986759 INVITE
 ## Responses
 SIP responses are very similar to requests; they only differ in the start line. Parsed responses have `statusCode` and `reason` fields:
 ```JavaScript
-import { parse } from './index';
+import { parse } from 'sip-parser';
 
 const sipResponse =
     'SIP/2.0 200 OK\r\n' +
