@@ -17,6 +17,7 @@ export interface SIPResponse {
 }
 
 export interface SipUri {
+    secure?: boolean,
     host: string,
     user?: string,
     port?: number,
