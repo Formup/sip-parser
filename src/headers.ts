@@ -21,7 +21,33 @@ function parseNormalHeaderLine(headerName: string, fullHeaderValueString: string
 }
 
 function splitNormalHeaderValues(valuesString: string): string[] {
-    return valuesString.split(',').map(part => part.trim());
+    /*
+        We split the values by commas, but we need to be careful with
+          * commas inside quoted strings
+          * escaped quotes inside quoted strings (e.g. "this is a quote \"")
+        see RFC 3261 section 25.1 "quoted-string"
+     */
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    let escapeNext = false;
+
+    for(const char of valuesString) {
+        if (escapeNext) {
+            escapeNext = false;
+        } else if (char === '\\') {
+            escapeNext = true;
+        } else if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+            continue;
+        }
+        current += char;
+    }
+
+    return result.concat(current.trim());
 }
 
 function buildSingleHeader(headerName: string, headerValue: string): Header {

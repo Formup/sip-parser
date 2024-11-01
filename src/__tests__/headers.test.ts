@@ -35,6 +35,15 @@ describe('parse header', () => {
         expect(parsedHeaders[0].fieldValue).toBe('<sip:alice@atlanta.com>');
         expect(parsedHeaders[1].fieldValue).toBe('<sip:bob@biloxi.com>');
     });
+    it('should respect quoted commas', () => {
+        const headerLine = 'Contact: "Doe, \\"Jimmy, Jim\\" John" <sip:john@doe.com>, "Smith, Jane" <sip:jane@smith.com>';
+        const parsedHeaders = parseHeaderLine(headerLine);
+        expect(parsedHeaders.length).toBe(2);
+        expect(parsedHeaders[0].fieldName).toBe('Contact');
+        expect(parsedHeaders[0].fieldValue).toBe('"Doe, \\"Jimmy, Jim\\" John" <sip:john@doe.com>');
+        expect(parsedHeaders[1].fieldName).toBe('Contact');
+        expect(parsedHeaders[1].fieldValue).toBe('"Smith, Jane" <sip:jane@smith.com>');
+    });
     it('should not add parameters if they do not exist', () => {
         const headerLine = 'Route: Alice <sip:alice@atlanta.com>';
         const parsedHeaders = parseHeaderLine(headerLine);
