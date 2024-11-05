@@ -8,19 +8,19 @@ export function parse(rawMessage: string): SIPMessage {
     const contentLines = isolateContentLines(rawMessage);
 
     const requestLineMatches = matchRequestLine(startLine);
-    if (requestLineMatches) {
-        if (requestLineMatches[3] !== '2.0')
-            throw new Error('Unsupported SIP version: ' + requestLineMatches[3]);
+    if (requestLineMatches?.groups) {
+        if (requestLineMatches.groups.version !== '2.0')
+            throw new Error('Unsupported SIP version: ' + requestLineMatches.groups.version);
 
-        return parseRequest(requestLineMatches[1], requestLineMatches[2], headerLines, contentLines);
+        return parseRequest(requestLineMatches.groups.method, requestLineMatches.groups.uri, headerLines, contentLines);
     }
 
     const statusLineMatches = matchStatusLine(startLine);
-    if (statusLineMatches) {
-        if (statusLineMatches[1] !== '2.0')
-            throw new Error('Unsupported SIP version: ' + statusLineMatches[1]);
+    if (statusLineMatches?.groups) {
+        if (statusLineMatches.groups.version !== '2.0')
+            throw new Error('Unsupported SIP version: ' + statusLineMatches.groups.version);
 
-        return parseResponse(parseInt(statusLineMatches[2]), statusLineMatches[3], headerLines, contentLines);
+        return parseResponse(parseInt(statusLineMatches.groups.code), statusLineMatches.groups.reason, headerLines, contentLines);
     }
 
     throw new Error('Message start line was neither a valid request line nor a valid status line: ' + startLine);
@@ -63,12 +63,12 @@ function isolateContentLines(messageString: string): string[] {
 
 function matchRequestLine(startLine: string) {
     // Matches the method, request URI and SIP version.
-    return startLine.match(/([A-Za-z]+)\s(sips?:(?:[\w.-]+@)?[\w\-.]+(?::\d+)?)\sSIP\/(\d\.\d)/);
+    return startLine.match(/(?<method>[A-Za-z]+)\s(?<uri>sips?:.+)\sSIP\/(?<version>\d\.\d)/);
 }
 
 function matchStatusLine(startLine: string) {
     // Matches the version, status code and reason string.
-    return startLine.match(/SIP\/(\d\.\d)\s(\d{3})\s(\w+)/);
+    return startLine.match(/SIP\/(?<version>\d\.\d)\s(?<code>\d{3})\s(?<reason>\w+)/);
 }
 
 function parseRequest(method: string, requestUri: string, headerLines: string[], contentLines: string[]): SIPRequest {
