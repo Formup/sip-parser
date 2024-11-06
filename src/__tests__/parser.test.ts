@@ -169,6 +169,37 @@ describe('start line', () => {
                 });
             }
         });
+        it('should read a Request-URI with parameters', () => {
+            const registerRequest =
+                'REGISTER sip:alice@atlanta.com;maddr=239.255.255.1;ttl=15 SIP/2.0\r\n' +
+                'Via: SIP/2.0/UDP bobspc.biloxi.com:5060;branch=z9hG4bKnashds7\r\n' +
+                'Max-Forwards: 70\r\n' +
+                'To: Bob <sip:bob@biloxi.com>\r\n' +
+                'From: Bob <sip:bob@biloxi.com>;tag=456248\r\n' +
+                'Call-ID: 843817637684230@998sdasdh09\r\n' +
+                'CSeq: 1826 REGISTER\r\n' +
+                'Contact: <sip:bob@192.0.2.4>\r\n' +
+                'Expires: 7200\r\n' +
+                'Content-Length: 0\r\n\r\n';
+            const parsed = parse(registerRequest);
+            expect('requestUri' in parsed);
+            if ('requestUri' in parsed) {
+                expect(parsed.requestUri).toEqual({
+                    user: 'alice',
+                    host: 'atlanta.com',
+                    parameters: [
+                        {
+                            name: 'maddr',
+                            value: '239.255.255.1'
+                        },
+                        {
+                            name: 'ttl',
+                            value: '15'
+                        }
+                    ]
+                });
+            }
+        });
         it.todo('should handle a user with unescaped, allowed special characters');
         it.todo('should handle a user with escaped special characters');
         it.todo('should throw an error for a version other than 2.0');
